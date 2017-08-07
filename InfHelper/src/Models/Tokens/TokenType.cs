@@ -2,10 +2,13 @@
 {
     public enum TokenType
     {
-        END,
+        // ;
         InlineComment,
+        // =
         EQ,
+        // [
         CategoryOpening,
+        // ]
         CategoryClosing,
     }
 }
