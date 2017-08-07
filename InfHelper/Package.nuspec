@@ -12,21 +12,21 @@
     <releaseNotes>
     </releaseNotes>
     <summary>
-      A short description of the package. If specified, this shows up in the middle pane of the Add Package Dialog. If not specified, a truncated version of the description is used instead.
+      Library for working with .inf files.
     </summary>
     <language>en-US</language>
     <projectUrl>https://nuget.org/packages/InfHelper</projectUrl>
     <iconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
-    <copyright>Copyright  2017</copyright>
+    <copyright>Copyright © Jan Skála 2017 - All Rights Reserved</copyright>
     <dependencies>
         <group targetFramework="net40">
           <dependency id="log4net" version="1.2.10" />
         </group>
     </dependencies>
     <references></references>
-    <tags></tags>
+    <tags>Inf parser utils helper</tags>
   </metadata>
   <files>
     <file src="lib\" target="lib" />
