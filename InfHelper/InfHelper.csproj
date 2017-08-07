@@ -59,11 +59,9 @@
     <Compile Include="src\Models\KeyValue.cs" />
     <Compile Include="src\Models\Tokens\CategoryClosingToken.cs" />
     <Compile Include="src\Models\Tokens\CategoryOpeningToken.cs" />
-    <Compile Include="src\Models\Tokens\EndToken.cs" />
     <Compile Include="src\Models\Tokens\EqualityToken.cs" />
     <Compile Include="src\Models\Tokens\InlineCommentToken.cs" />
     <Compile Include="src\Models\Tokens\IToken.cs" />
-    <Compile Include="src\Models\Tokens\NewLineToken.cs" />
     <Compile Include="src\Models\Tokens\TokenType.cs" />
     <Compile Include="src\Parsers\BaseParser.cs" />
   </ItemGroup>

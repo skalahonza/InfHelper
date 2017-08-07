@@ -3,7 +3,6 @@
     public enum TokenType
     {
         END,
-        NewLine,
         InlineComment,
         EQ,
         CategoryOpening,

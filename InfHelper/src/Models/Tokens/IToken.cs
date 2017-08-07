@@ -2,7 +2,7 @@ namespace InfHelper.Models.Tokens
 {
     public interface IToken
     {
-        string[] Symbols { get; }
+        char[] Symbols { get; }
         TokenType Type { get; }
     }
 }
