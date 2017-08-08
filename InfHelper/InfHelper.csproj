@@ -63,8 +63,13 @@
     <Compile Include="src\Models\Tokens\EqualityToken.cs" />
     <Compile Include="src\Models\Tokens\InlineCommentToken.cs" />
     <Compile Include="src\Models\Tokens\IToken.cs" />
+    <Compile Include="src\Models\Tokens\LetterToken.cs" />
+    <Compile Include="src\Models\Tokens\LineConcatenatorToken.cs" />
+    <Compile Include="src\Models\Tokens\NewLineToken.cs" />
     <Compile Include="src\Models\Tokens\TokenType.cs" />
-    <Compile Include="src\Parsers\TokenParser.cs" />
+    <Compile Include="src\Models\Tokens\WhiteSpaceToken.cs" />
+    <Compile Include="src\Parsers\ITokenParser.cs" />
+    <Compile Include="src\Parsers\BaseTokenParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="NuGetPackage.ps1" />
@@ -72,6 +77,7 @@
     <None Include="NuGet.exe" />
     <None Include="NuGet.config" />
     <None Include="Package.nuspec" />
+    <None Include="packages.config" />
     <None Include="tools\init.ps1" />
     <None Include="tools\install.ps1" />
     <None Include="tools\uninstall.ps1" />

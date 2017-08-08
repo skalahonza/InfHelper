@@ -10,5 +10,13 @@
         CategoryOpening,
         // ]
         CategoryClosing,
+        // \r space etc
+        WhiteSpace,
+        // a-z A-Z
+        Letter,
+        // \n
+        NewLine,
+        // \
+        LineConcatenator,
     }
 }
