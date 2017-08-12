@@ -69,6 +69,7 @@
     <Compile Include="src\Models\Tokens\NewLineToken.cs" />
     <Compile Include="src\Models\Tokens\TokenType.cs" />
     <Compile Include="src\Models\Tokens\WhiteSpaceToken.cs" />
+    <Compile Include="src\Parsers\ContentParser.cs" />
     <Compile Include="src\Parsers\ITokenParser.cs" />
     <Compile Include="src\Parsers\BasicTokenParser.cs" />
   </ItemGroup>
