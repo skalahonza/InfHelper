@@ -9,12 +9,15 @@ namespace InfHelper.Parsers
 {
     public class BasicTokenParser : ITokenParser
     {
+        private EventHandler<IToken> validTokenFound;
+        private EventHandler<IToken> invalidTokenFound;
+
         public ICollection<IToken> AllTokens { get; set; }
         public ICollection<IToken> AllowedTokens { get; set; }
         public ICollection<IToken> IgnoredTokens { get; set; }
 
-        public EventHandler<IToken> ValidTokenFound { get; set; }
-        public EventHandler<IToken> InvalidTokenFound { get; set; }
+        public event EventHandler<IToken> InvalidTokenFound;
+        public event EventHandler<IToken> ValidTokenFound;
 
         public BasicTokenParser()
         {
@@ -59,7 +62,7 @@ namespace InfHelper.Parsers
                     //not allowed token detected
                     if (AllowedTokens.All(x => x.Type != token.Type))
                     {
-                        InvalidTokenFound?.Invoke(this, token);
+                        invalidTokenFound?.Invoke(this, token);
                         continue;                        
                     }
 
@@ -68,7 +71,7 @@ namespace InfHelper.Parsers
                         continue;                    
 
                     //allowed token detected
-                    ValidTokenFound?.Invoke(this,token);
+                    validTokenFound?.Invoke(this,token);
                 }
 
                 //token not recognized

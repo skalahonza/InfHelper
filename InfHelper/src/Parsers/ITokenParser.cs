@@ -9,8 +9,8 @@ namespace InfHelper.Parsers
         ICollection<IToken> AllowedTokens { get; set; }
         ICollection<IToken> AllTokens { get; set; }
         ICollection<IToken> IgnoredTokens { get; set; }
-        EventHandler<IToken> InvalidTokenFound { get; set; }
-        EventHandler<IToken> ValidTokenFound { get; set; }
+        event EventHandler<IToken> InvalidTokenFound;
+        event EventHandler<IToken> ValidTokenFound;
 
         void ParseToken(string formula);
     }
