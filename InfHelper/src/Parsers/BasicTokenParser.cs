@@ -49,16 +49,16 @@ namespace InfHelper.Parsers
                     token.Symbol = c;
                     found = true;
 
+                    //ignored token detected
+                    if (IgnoredTokens != null && IgnoredTokens.Any(x => x.Type == token.Type))
+                        continue;
+
                     //not allowed token detected
-                    if (AllowedTokens.All(x => x.Type != token.Type))
+                    if (AllowedTokens == null || AllowedTokens.All(x => x.Type != token.Type))
                     {
                         InvalidTokenFound?.Invoke(this, token);
                         continue;
-                    }
-
-                    //ignored token detected
-                    if (IgnoredTokens.Any(x => x.Type == token.Type))
-                        continue;
+                    }                   
 
                     //allowed token detected
                     ValidTokenFound?.Invoke(this, token);
