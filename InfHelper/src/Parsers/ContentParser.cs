@@ -13,10 +13,6 @@ namespace InfHelper.Parsers
         private Key currentKey;
         private readonly ITokenParser parser;
 
-        public ContentParser() : this(new BasicTokenParser())
-        {
-        }
-
         public ContentParser(ITokenParser parser)
         {
             this.parser = parser;

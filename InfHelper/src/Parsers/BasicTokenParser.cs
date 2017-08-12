@@ -15,30 +15,24 @@ namespace InfHelper.Parsers
         public event EventHandler<IToken> InvalidTokenFound;
         public event EventHandler<IToken> ValidTokenFound;
 
-        public BasicTokenParser()
-        {
-            AllTokens = new HashSet<IToken>
-            {
-                new CategoryClosingToken(),
-                new CategoryOpeningToken(),
-                new EqualityToken(),
-                new InlineCommentToken(),
-                new NewLineToken(),
-                new WhiteSpaceToken(),
-                new LineConcatenatorToken(),
-                new LetterToken(),
-            };
-        }
-
-        public BasicTokenParser(ICollection<IToken> allowedTokens) : this()
-        {
-            AllowedTokens = allowedTokens;
-        }
-
-        public BasicTokenParser(ICollection<IToken> allTokens, ICollection<IToken> allowedTokens) : this(allowedTokens)
+        public BasicTokenParser(ICollection<IToken> allTokens, ICollection<IToken> allowedTokens, ICollection<IToken> ignoredTokens)
         {
             AllTokens = allTokens;
+            AllowedTokens = allowedTokens;
+            IgnoredTokens = ignoredTokens;
         }
+
+        public static HashSet<IToken> AllAvailableTokens => new HashSet<IToken>
+        {
+            new CategoryClosingToken(),
+            new CategoryOpeningToken(),
+            new EqualityToken(),
+            new InlineCommentToken(),
+            new NewLineToken(),
+            new WhiteSpaceToken(),
+            new LineConcatenatorToken(),
+            new LetterToken(),
+        };
 
         public virtual void ParseToken(string formula)
         {

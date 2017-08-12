@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfHelper", "InfHelper\InfHelper.csproj", "{0451BAEF-DF2E-4B98-8644-94EE9415E389}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfHelperTests", "InfHelperTests\InfHelperTests.csproj", "{0E4BDA76-79FA-48B5-8B9E-3937C8A255CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0451BAEF-DF2E-4B98-8644-94EE9415E389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E4BDA76-79FA-48B5-8B9E-3937C8A255CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E4BDA76-79FA-48B5-8B9E-3937C8A255CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E4BDA76-79FA-48B5-8B9E-3937C8A255CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E4BDA76-79FA-48B5-8B9E-3937C8A255CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
