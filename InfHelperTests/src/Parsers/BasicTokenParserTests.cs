@@ -47,5 +47,32 @@ namespace InfHelperTests.Parsers
 
             Assert.AreEqual(expression, result);
         }
+
+        [TestMethod()]
+        public void AllowedTokensTest()
+        {
+            string formula = "[TE;ST] \\";
+            var parser = new BasicTokenParser(BasicTokenParser.AllAvailableTokens, new HashSet<IToken>()
+            {
+                new CategoryOpeningToken(),
+                new LetterToken(),
+                new CategoryClosingToken(),
+            }, new HashSet<IToken>()
+            {
+                new WhiteSpaceToken(),
+                new NewLineToken()
+            });
+
+            string result = "";
+            string invalids = "";
+            parser.ValidTokenFound += (sender, token) => result += token.Symbol;
+            parser.InvalidTokenFound += (sender, token) =>
+            {
+                invalids += token.Symbol;
+            };
+            parser.ParseToken(formula);
+
+            Assert.IsTrue(invalids.Contains(";") && invalids.Contains("\\"));
+        }
     }
 }
