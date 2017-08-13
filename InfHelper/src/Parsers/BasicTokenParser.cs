@@ -8,15 +8,26 @@ namespace InfHelper.Parsers
 {
     public class BasicTokenParser : ITokenParser
     {
-        public ICollection<IToken> AllTokens { get; set; }
-        public ICollection<IToken> AllowedTokens { get; set; }
-        public ICollection<IToken> IgnoredTokens { get; set; }
+        private IEnumerable<IToken> allTokens;
+
+        public IEnumerable<IToken> AllTokens
+        {
+            get => allTokens;
+            private set
+            {
+                //Sort by priority - soe tokens share symbyols e.g. line concatenator and letter
+                allTokens = value.OrderByDescending(x => (int)x.Type);
+            }
+        }
+
+        public IEnumerable<IToken> AllowedTokens { get; set; }
+        public IEnumerable<IToken> IgnoredTokens { get; set; }
 
         public event EventHandler<IToken> InvalidTokenFound;
         public event EventHandler<IToken> ValidTokenFound;
 
-        public BasicTokenParser(ICollection<IToken> allTokens, ICollection<IToken> allowedTokens, ICollection<IToken> ignoredTokens)
-        {
+        public BasicTokenParser(IEnumerable<IToken> allTokens, IEnumerable<IToken> allowedTokens, IEnumerable<IToken> ignoredTokens)
+        {            
             AllTokens = allTokens;
             AllowedTokens = allowedTokens;
             IgnoredTokens = ignoredTokens;
@@ -34,7 +45,7 @@ namespace InfHelper.Parsers
             new LetterToken(),
         };
 
-        public virtual void ParseToken(string formula)
+        public virtual void ParseFormula(string formula)
         {
             foreach (var c in formula)
             {
