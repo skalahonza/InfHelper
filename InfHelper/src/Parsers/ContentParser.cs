@@ -65,8 +65,7 @@ namespace InfHelper.Parsers
         protected void InitCategoryParsing()
         {
             currentCategory = new Category();
-            parser.ValidTokenFound -= ValidTokenFoundDuringMainParsing;
-            parser.ValidTokenFound -= ValidTokenFoundDuringKeyIdParsing;
+            ClearAllMyCallbacks();
             parser.ValidTokenFound += ValidTokenFoundDuringCategoryParsing;
             parser.IgnoredTokens?.Clear();
             parser.AllowedTokens = new HashSet<IToken>
@@ -82,7 +81,7 @@ namespace InfHelper.Parsers
         protected void InitKeyIdParsing()
         {
             currentKey = new Key();
-            parser.ValidTokenFound -= ValidTokenFoundDuringCategoryParsing;
+            ClearAllMyCallbacks();
             parser.ValidTokenFound += ValidTokenFoundDuringKeyIdParsing;
 
             parser.AllowedTokens = new HashSet<IToken>
@@ -103,7 +102,18 @@ namespace InfHelper.Parsers
         /// </summary>
         protected void InitKeyValueParsing()
         {
-            //TODO IMPLEMENT THIS
+            ClearAllMyCallbacks();
+            parser.ValidTokenFound += ValidTokenFoundDuringKeyValueParsing;
+
+            parser.AllowedTokens = new HashSet<IToken>
+            {
+                new ValueSeparatorToken(),
+                new LetterToken(),
+                new WhiteSpaceToken(),
+                new NewLineToken()
+            };
+
+            parser.IgnoredTokens?.Clear();
         }
 
         //Parsing top layer
@@ -153,7 +163,8 @@ namespace InfHelper.Parsers
                     {
                         throw new InvalidTokenException("Equality token detected, but not expected.");
                     }
-                    currentKey.Id = keyTmpValue;                    
+                    currentKey.Id = keyTmpValue;
+                    keyTmpValue = null;
                     InitKeyValueParsing();
                     break;
                 case TokenType.WhiteSpace:
@@ -184,6 +195,12 @@ namespace InfHelper.Parsers
                 default:
                     throw new InvalidTokenException("Invalid token found during parsing of the file: " + token.Symbol);
             }
+        }
+
+        //When parsing value
+        protected void ValidTokenFoundDuringKeyValueParsing(object sender, IToken token)
+        {
+            //TODO Implement this
         }
 
         protected void InvalidTokenFound(object sender, IToken token)
@@ -226,6 +243,14 @@ namespace InfHelper.Parsers
                 keyTmpValue = null;
                 KeyParsingComplete();
             }
+        }
+
+        private void ClearAllMyCallbacks()
+        {
+            parser.ValidTokenFound -= ValidTokenFoundDuringMainParsing;
+            parser.ValidTokenFound -= ValidTokenFoundDuringCategoryParsing;
+            parser.ValidTokenFound -= ValidTokenFoundDuringKeyIdParsing;
+            parser.ValidTokenFound -= ValidTokenFoundDuringKeyValueParsing;
         }
     }
 }

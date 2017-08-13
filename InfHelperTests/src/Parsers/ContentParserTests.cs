@@ -49,5 +49,20 @@ namespace InfHelperTests.Parsers
                 Assert.IsTrue(categories.Any(x => x.Name == $"CATEGORY{i}"));
             }
         }
+
+        [TestMethod()]
+        public void SimpleCategoryWithSimpleKey()
+        {
+            string formula = "[Category] \n Key = Value";
+            var parser = new ContentParser();
+
+            var categories = new List<Category>();
+            parser.CategoryDiscovered += (sender, category) => categories.Add(category);
+            parser.Parse(formula);
+
+            Assert.IsTrue(categories.First().Name == "Category");
+            var key = categories.First().Keys.First();
+            Assert.IsTrue(key.Id == "Key" && key.KeyValues.Count == 1 && key.KeyValues.First().Value == "Value");
+        }
     }
 }

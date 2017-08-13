@@ -68,6 +68,7 @@
     <Compile Include="src\Models\Tokens\LineConcatenatorToken.cs" />
     <Compile Include="src\Models\Tokens\NewLineToken.cs" />
     <Compile Include="src\Models\Tokens\TokenType.cs" />
+    <Compile Include="src\Models\Tokens\ValueSeparatorToken.cs" />
     <Compile Include="src\Models\Tokens\WhiteSpaceToken.cs" />
     <Compile Include="src\Parsers\ContentParser.cs" />
     <Compile Include="src\Parsers\ITokenParser.cs" />
