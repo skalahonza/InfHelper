@@ -18,5 +18,8 @@
         NewLine,
         // \
         LineConcatenator,
+
+        // ,
+        ValueSeparator,
     }
 }
