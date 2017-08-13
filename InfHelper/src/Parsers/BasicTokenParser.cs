@@ -8,25 +8,25 @@ namespace InfHelper.Parsers
 {
     public class BasicTokenParser : ITokenParser
     {
-        private IEnumerable<IToken> allTokens;
+        private ISet<IToken> allTokens;
 
-        public IEnumerable<IToken> AllTokens
+        public ISet<IToken> AllTokens
         {
             get => allTokens;
             private set
             {
                 //Sort by priority - soe tokens share symbyols e.g. line concatenator and letter
-                allTokens = value.OrderByDescending(x => (int)x.Type);
+                allTokens = new HashSet<IToken>(value.OrderByDescending(x => (int)x.Type));
             }
         }
 
-        public IEnumerable<IToken> AllowedTokens { get; set; }
-        public IEnumerable<IToken> IgnoredTokens { get; set; }
+        public ISet<IToken> AllowedTokens { get; set; }
+        public ISet<IToken> IgnoredTokens { get; set; }
 
         public event EventHandler<IToken> InvalidTokenFound;
         public event EventHandler<IToken> ValidTokenFound;
 
-        public BasicTokenParser(IEnumerable<IToken> allTokens, IEnumerable<IToken> allowedTokens, IEnumerable<IToken> ignoredTokens)
+        public BasicTokenParser(ISet<IToken> allTokens, ISet<IToken> allowedTokens, ISet<IToken> ignoredTokens)
         {            
             AllTokens = allTokens;
             AllowedTokens = allowedTokens;

@@ -143,7 +143,7 @@ namespace InfHelperTests.Parsers
                         key += token.Symbol;
                         break;
                     case TokenType.LineConcatenator:
-                        parser.IgnoredTokens = parser.IgnoredTokens.Concat(new[] {new NewLineToken()});                    
+                        parser.IgnoredTokens.Add(new NewLineToken());                  
                         break;
                 }
             }

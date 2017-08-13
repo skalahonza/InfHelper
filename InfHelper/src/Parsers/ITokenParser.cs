@@ -6,9 +6,9 @@ namespace InfHelper.Parsers
 {
     public interface ITokenParser
     {
-        IEnumerable<IToken> AllowedTokens { get; set; }
-        IEnumerable<IToken> AllTokens { get;}
-        IEnumerable<IToken> IgnoredTokens { get; set; }
+        ISet<IToken> AllowedTokens { get; set; }
+        ISet<IToken> AllTokens { get;}
+        ISet<IToken> IgnoredTokens { get; set; }
         event EventHandler<IToken> InvalidTokenFound;
         event EventHandler<IToken> ValidTokenFound;
 
