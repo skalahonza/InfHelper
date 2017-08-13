@@ -20,6 +20,10 @@ namespace InfHelper.Models.Tokens
             for (char i = 'A'; i <= 'Z'; i++)
                 symbols.Add(i);
 
+            // 0-9
+            for (char i = '0'; i <= '9'; i++)
+                symbols.Add(i);
+
             Symbols = symbols.ToArray();
         }
     }

@@ -13,17 +13,28 @@ namespace InfHelper.Parsers
         private Key currentKey;
         private readonly ITokenParser parser;
 
+        public ContentParser():this(new BasicTokenParser())
+        {
+            
+        }
+
         public ContentParser(ITokenParser parser)
         {
             this.parser = parser;
-            parser.InvalidTokenFound += InvalidTokenFound;
+            parser.InvalidTokenFound += InvalidTokenFound;            
+        }
+
+        public void Parse(string content)
+        {
             InitMainParsing();
+            parser.ParseFormula(content);
+            CategoryParsingComplete();
         }
 
         /// <summary>
         /// When category parsing is completed
         /// </summary>
-        public EventHandler<Category> CategoryDiscovered { get; set; }
+        public event EventHandler<Category> CategoryDiscovered;
 
         /// <summary>
         /// Inits main parsing state. Skips inlines comments, white spaces and new lines and init new cateory parsing when category opening token found.

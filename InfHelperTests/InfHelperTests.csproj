@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Parsers\BasicTokenParserTests.cs" />
+    <Compile Include="src\Parsers\ContentParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -26,6 +26,11 @@ namespace InfHelper.Parsers
         public event EventHandler<IToken> InvalidTokenFound;
         public event EventHandler<IToken> ValidTokenFound;
 
+        public BasicTokenParser():this(new HashSet<IToken>(), new HashSet<IToken>())
+        {
+            AllTokens = AllAvailableTokens;
+        }
+
         public BasicTokenParser(ISet<IToken> allowedTokens, ISet<IToken> ignoredTokens)
         {
             AllTokens = AllAvailableTokens;
