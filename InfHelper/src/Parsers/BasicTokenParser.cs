@@ -26,6 +26,13 @@ namespace InfHelper.Parsers
         public event EventHandler<IToken> InvalidTokenFound;
         public event EventHandler<IToken> ValidTokenFound;
 
+        public BasicTokenParser(ISet<IToken> allowedTokens, ISet<IToken> ignoredTokens)
+        {
+            AllTokens = AllAvailableTokens;
+            AllowedTokens = allowedTokens;
+            IgnoredTokens = ignoredTokens;
+        }
+
         public BasicTokenParser(ISet<IToken> allTokens, ISet<IToken> allowedTokens, ISet<IToken> ignoredTokens)
         {            
             AllTokens = allTokens;
@@ -33,7 +40,7 @@ namespace InfHelper.Parsers
             IgnoredTokens = ignoredTokens;
         }
 
-        public static HashSet<IToken> AllAvailableTokens => new HashSet<IToken>
+        public static ISet<IToken> AllAvailableTokens => new HashSet<IToken>
         {
             new CategoryClosingToken(),
             new CategoryOpeningToken(),

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using InfHelper.Models.Tokens;
 using InfHelper.Parsers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,7 +12,7 @@ namespace InfHelperTests.Parsers
         public void TokenOrderTest()
         {
             string formula = "[TEST]";
-            var parser = new BasicTokenParser(BasicTokenParser.AllAvailableTokens, new HashSet<IToken>
+            var parser = new BasicTokenParser(new HashSet<IToken>
             {
                 new CategoryOpeningToken(),
                 new LetterToken(),
@@ -32,7 +30,7 @@ namespace InfHelperTests.Parsers
         {
             string expression = "[TEST]";
             string formula = "  \n   " + expression + "   \n   ";
-            var parser = new BasicTokenParser(BasicTokenParser.AllAvailableTokens, new HashSet<IToken>
+            var parser = new BasicTokenParser(new HashSet<IToken>
             {
                 new CategoryOpeningToken(),
                 new LetterToken(),
@@ -54,7 +52,7 @@ namespace InfHelperTests.Parsers
         public void AllowedTokensTest()
         {
             string formula = "[TE;ST] \\";
-            var parser = new BasicTokenParser(BasicTokenParser.AllAvailableTokens, new HashSet<IToken>
+            var parser = new BasicTokenParser(new HashSet<IToken>
             {
                 new CategoryOpeningToken(),
                 new LetterToken(),
@@ -81,7 +79,7 @@ namespace InfHelperTests.Parsers
         public void TokensWithSameSymbol()
         {
             string formula = "Test = test\\\ntest";
-            var parser = new BasicTokenParser(BasicTokenParser.AllAvailableTokens, new HashSet<IToken>
+            var parser = new BasicTokenParser(new HashSet<IToken>
             {
                 new LetterToken(),
                 new EqualityToken(),
@@ -103,7 +101,7 @@ namespace InfHelperTests.Parsers
         public void TestOfAdaptability()
         {
             string formula = "Test = test\\\ntest";
-            var parser = new BasicTokenParser(BasicTokenParser.AllAvailableTokens, new HashSet<IToken>
+            var parser = new BasicTokenParser(new HashSet<IToken>
             {
                 new LetterToken(),
                 new EqualityToken(),
