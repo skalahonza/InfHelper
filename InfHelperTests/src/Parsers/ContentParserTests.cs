@@ -94,5 +94,28 @@ namespace InfHelperTests.Parsers
                 Assert.IsTrue(firstCategory.Keys[i].KeyValues.First().Value == $"Value{i}" );
             }
         }
+
+        [TestMethod()]
+        public void SimpleCategoryWithMultipleSimpleKeysReal()
+        {
+            string formula =
+                "[Install_MPCIEX_GENM2_D_REV_59_7265_BGN_2x2_HMC_WINT_64_BGN15.Services]\r\nInclude         = netvwifibus.inf\r\nNeeds           = VWiFiBus.Services";
+
+            var parser = new ContentParser();
+
+            var categories = new List<Category>();
+            parser.CategoryDiscovered += (sender, category) => categories.Add(category);
+            parser.Parse(formula);
+
+            var firstCategory = categories.First();
+
+            Assert.IsTrue(firstCategory.Name == "Install_MPCIEX_GENM2_D_REV_59_7265_BGN_2x2_HMC_WINT_64_BGN15.Services");
+
+            Assert.AreEqual(firstCategory.Keys[0].Id, "Include");
+            Assert.AreEqual(firstCategory.Keys[1].Id, "Needs");
+
+            Assert.AreEqual(firstCategory.Keys[0].KeyValues.First().Value, "netvwifibus.inf");
+            Assert.AreEqual(firstCategory.Keys[1].KeyValues.First().Value, "VWiFiBus.Services");
+        }
     }
 }
