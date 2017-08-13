@@ -25,16 +25,17 @@ namespace InfHelperTests.Parsers
         [TestMethod()]
         public void MultipleCategoryParsing()
         {
-            string test = "[CATEGORY] \n [CATEGORY2]";
+            string test = "[CATEGORY] \n [CATEGORY2] \n [CATEGORY3]";
             var categories = new List<Category>();
             var parser = new ContentParser();
             parser.CategoryDiscovered += (sender, category) => categories.Add(category);
 
             parser.Parse(test);
 
-            Assert.IsTrue(categories.Count == 2);
+            Assert.IsTrue(categories.Count == 3);
             Assert.IsTrue(categories.Any(x => x.Name == "CATEGORY"));
             Assert.IsTrue(categories.Any(x => x.Name == "CATEGORY2"));
+            Assert.IsTrue(categories.Any(x => x.Name == "CATEGORY3"));
         }
     }
 }

@@ -13,15 +13,15 @@ namespace InfHelper.Parsers
         private Key currentKey;
         private readonly ITokenParser parser;
 
-        public ContentParser():this(new BasicTokenParser())
+        public ContentParser() : this(new BasicTokenParser())
         {
-            
+
         }
 
         public ContentParser(ITokenParser parser)
         {
             this.parser = parser;
-            parser.InvalidTokenFound += InvalidTokenFound;            
+            parser.InvalidTokenFound += InvalidTokenFound;
         }
 
         public void Parse(string content)
@@ -62,10 +62,11 @@ namespace InfHelper.Parsers
         /// </summary>
         private void InitCategoryParsing()
         {
+            currentCategory = new Category();
             parser.ValidTokenFound -= ValidTokenFoundDuringMainParsing;
             parser.ValidTokenFound -= ValidTokenFoundDuringKeyIdParsing;
             parser.ValidTokenFound += ValidTokenFoundDuringCategoryParsing;
-            parser.IgnoredTokens = new HashSet<IToken>();
+            parser.IgnoredTokens?.Clear();
             parser.AllowedTokens = new HashSet<IToken>
             {
                 new CategoryClosingToken(),
@@ -86,9 +87,14 @@ namespace InfHelper.Parsers
                 new InlineCommentToken(),
                 new LetterToken(),
                 new EqualityToken(),
+                new WhiteSpaceToken(),
+                new CategoryOpeningToken(),
             };
 
-            parser.IgnoredTokens = new HashSet<IToken>();
+            parser.IgnoredTokens = new HashSet<IToken>
+            {
+                new NewLineToken(),
+            };
         }
 
         //Parsing top layer
@@ -132,6 +138,7 @@ namespace InfHelper.Parsers
                 case TokenType.EQ:
                     break;
                 case TokenType.WhiteSpace:
+                    //TODO HANDLE THIS
                     break;
                 case TokenType.Letter:
                     if (currentKey == null)
@@ -140,11 +147,9 @@ namespace InfHelper.Parsers
                     }
                     currentKey.Id += token.Symbol;
                     break;
-                case TokenType.LineConcatenator:
-                    break;
                 case TokenType.CategoryOpening:
-                    InitCategoryParsing();
                     CategoryParsingComplete();
+                    InitCategoryParsing();
                     break;
                 case TokenType.InlineComment:
                     if (currentKey != null && currentKey.KeyValues.Any())
@@ -168,14 +173,20 @@ namespace InfHelper.Parsers
 
         private void KeyParsingComplete()
         {
-            currentCategory.Keys.Add(currentKey);
-            currentKey = null;
+            if (currentKey != null)
+            {
+                currentCategory.Keys.Add(currentKey);
+                currentKey = null;
+            }
         }
 
         private void CategoryParsingComplete()
         {
-            CategoryDiscovered?.Invoke(this, currentCategory);
-            currentCategory = null;
+            if (currentCategory != null)
+            {
+                CategoryDiscovered?.Invoke(this, currentCategory);
+                currentCategory = null;
+            }
         }
     }
 }
