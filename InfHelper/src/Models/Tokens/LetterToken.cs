@@ -10,7 +10,7 @@ namespace InfHelper.Models.Tokens
 
         public LetterToken()
         {
-            var symbols = new List<char> { '.' };
+            var symbols = new List<char> { '.', '_', '\\', '%' };
 
             //add a-z
             for (char i = 'a'; i <= 'z'; i++)

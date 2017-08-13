@@ -12,6 +12,8 @@ namespace InfHelper.Parsers
         private Category currentCategory;
         private Key currentKey;
         private readonly ITokenParser parser;
+        private KeyValue curentValue;
+        private string keyTmpValue;
 
         public ContentParser() : this(new BasicTokenParser())
         {
@@ -39,7 +41,7 @@ namespace InfHelper.Parsers
         /// <summary>
         /// Inits main parsing state. Skips inlines comments, white spaces and new lines and init new cateory parsing when category opening token found.
         /// </summary>
-        private void InitMainParsing()
+        protected void InitMainParsing()
         {
             parser.ValidTokenFound -= ValidTokenFoundDuringKeyIdParsing;
             parser.ValidTokenFound += ValidTokenFoundDuringMainParsing;
@@ -60,7 +62,7 @@ namespace InfHelper.Parsers
         /// <summary>
         /// Parse only letter tokens, end parsing when closing token found.
         /// </summary>
-        private void InitCategoryParsing()
+        protected void InitCategoryParsing()
         {
             currentCategory = new Category();
             parser.ValidTokenFound -= ValidTokenFoundDuringMainParsing;
@@ -77,8 +79,9 @@ namespace InfHelper.Parsers
         /// <summary>
         /// Parse key id.
         /// </summary>
-        private void InitKeyIdParsing()
+        protected void InitKeyIdParsing()
         {
+            currentKey = new Key();
             parser.ValidTokenFound -= ValidTokenFoundDuringCategoryParsing;
             parser.ValidTokenFound += ValidTokenFoundDuringKeyIdParsing;
 
@@ -89,16 +92,22 @@ namespace InfHelper.Parsers
                 new EqualityToken(),
                 new WhiteSpaceToken(),
                 new CategoryOpeningToken(),
-            };
-
-            parser.IgnoredTokens = new HashSet<IToken>
-            {
                 new NewLineToken(),
             };
+
+            parser.IgnoredTokens = new HashSet<IToken>();
+        }
+
+        /// <summary>
+        /// Parse values for current key
+        /// </summary>
+        protected void InitKeyValueParsing()
+        {
+            //TODO IMPLEMENT THIS
         }
 
         //Parsing top layer
-        private void ValidTokenFoundDuringMainParsing(object sender, IToken token)
+        protected void ValidTokenFoundDuringMainParsing(object sender, IToken token)
         {
             switch (token.Type)
             {
@@ -115,7 +124,7 @@ namespace InfHelper.Parsers
         }
 
         //when parsing a category
-        private void ValidTokenFoundDuringCategoryParsing(object sender, IToken token)
+        protected void ValidTokenFoundDuringCategoryParsing(object sender, IToken token)
         {
             switch (token.Type)
             {
@@ -131,23 +140,34 @@ namespace InfHelper.Parsers
         }
 
         //when parsing a token id
-        private void ValidTokenFoundDuringKeyIdParsing(object sender, IToken token)
+        protected void ValidTokenFoundDuringKeyIdParsing(object sender, IToken token)
         {
             switch (token.Type)
             {
+                case TokenType.NewLine:
+                    SerializeCurrentTmpValueAsAnonymousKey();
+                    break;
                 case TokenType.EQ:
+                    // multiple EQ tokens in formula
+                    if (!string.IsNullOrEmpty(currentKey.Id))
+                    {
+                        throw new InvalidTokenException("Equality token detected, but not expected.");
+                    }
+                    currentKey.Id = keyTmpValue;                    
+                    InitKeyValueParsing();
                     break;
                 case TokenType.WhiteSpace:
-                    //TODO HANDLE THIS
+                    //ignore spaces at the begining
+                    if (!string.IsNullOrEmpty(keyTmpValue))
+                    {
+                        keyTmpValue += token.Symbol;
+                    }
                     break;
                 case TokenType.Letter:
-                    if (currentKey == null)
-                    {
-                        currentKey = new Key();
-                    }
-                    currentKey.Id += token.Symbol;
+                    keyTmpValue += token.Symbol;
                     break;
                 case TokenType.CategoryOpening:
+                    KeyParsingComplete();
                     CategoryParsingComplete();
                     InitCategoryParsing();
                     break;
@@ -166,12 +186,12 @@ namespace InfHelper.Parsers
             }
         }
 
-        private void InvalidTokenFound(object sender, IToken token)
+        protected void InvalidTokenFound(object sender, IToken token)
         {
             throw new InvalidTokenException("Invalid token found during parsing of the file: " + token.Symbol);
         }
 
-        private void KeyParsingComplete()
+        protected void KeyParsingComplete()
         {
             if (currentKey != null)
             {
@@ -180,12 +200,31 @@ namespace InfHelper.Parsers
             }
         }
 
-        private void CategoryParsingComplete()
+        protected void ValueParsingComplete()
+        {
+            if (curentValue != null)
+            {
+                currentKey.KeyValues.Add(curentValue);
+                curentValue = null;
+            }
+        }
+
+        protected void CategoryParsingComplete()
         {
             if (currentCategory != null)
             {
                 CategoryDiscovered?.Invoke(this, currentCategory);
                 currentCategory = null;
+            }
+        }
+
+        protected void SerializeCurrentTmpValueAsAnonymousKey()
+        {
+            if (!string.IsNullOrEmpty(keyTmpValue))
+            {
+                currentKey.KeyValues = KeyValues.GetKeyValuesFrom(keyTmpValue);
+                keyTmpValue = null;
+                KeyParsingComplete();
             }
         }
     }

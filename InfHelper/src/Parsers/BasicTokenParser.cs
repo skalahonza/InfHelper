@@ -85,6 +85,7 @@ namespace InfHelper.Parsers
 
                     //allowed token detected
                     ValidTokenFound?.Invoke(this, token);
+                    break;
                 }
 
                 //token not recognized
