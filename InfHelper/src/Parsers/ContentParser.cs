@@ -12,7 +12,6 @@ namespace InfHelper.Parsers
         private Category currentCategory;
         private Key currentKey;
         private readonly ITokenParser parser;
-        private KeyValue curentValue;
         private string keyTmpValue;
 
         public ContentParser() : this(new BasicTokenParser())
@@ -30,6 +29,8 @@ namespace InfHelper.Parsers
         {
             InitMainParsing();
             parser.ParseFormula(content);
+            ValueParsingComplete();
+            KeyParsingComplete();
             CategoryParsingComplete();
         }
 
@@ -109,8 +110,8 @@ namespace InfHelper.Parsers
             {
                 new ValueSeparatorToken(),
                 new LetterToken(),
+                new NewLineToken(),
                 new WhiteSpaceToken(),
-                new NewLineToken()
             };
 
             parser.IgnoredTokens?.Clear();
@@ -163,8 +164,7 @@ namespace InfHelper.Parsers
                     {
                         throw new InvalidTokenException("Equality token detected, but not expected.");
                     }
-                    currentKey.Id = keyTmpValue;
-                    keyTmpValue = null;
+                    KeyIdParsingCompleted();
                     InitKeyValueParsing();
                     break;
                 case TokenType.WhiteSpace:
@@ -195,17 +195,42 @@ namespace InfHelper.Parsers
                 default:
                     throw new InvalidTokenException("Invalid token found during parsing of the file: " + token.Symbol);
             }
-        }
+        }        
 
         //When parsing value
         protected void ValidTokenFoundDuringKeyValueParsing(object sender, IToken token)
         {
-            //TODO Implement this
+            switch (token.Type)
+            {
+                case TokenType.ValueSeparator:
+                    if (string.IsNullOrEmpty(keyTmpValue))
+                    {
+                        throw new InvalidTokenException("Unexpected value separator occurrence.");
+                    }
+                    ValueParsingComplete();
+                    break;
+                case TokenType.Letter:
+                    keyTmpValue += token.Symbol;
+                    break;
+                case TokenType.NewLine:
+                    if (string.IsNullOrEmpty(keyTmpValue))
+                    {
+                        throw new InvalidTokenException("Key value or line concatenator (\\) not found.");
+                    }
+                    KeyParsingComplete();
+                    break;
+                case TokenType.WhiteSpace:
+                    if (string.IsNullOrEmpty(keyTmpValue))
+                    {
+                        ValueParsingComplete();
+                    }
+                    break;
+            }
         }
 
         protected void InvalidTokenFound(object sender, IToken token)
         {
-            throw new InvalidTokenException("Invalid token found during parsing of the file: " + token.Symbol);
+            throw new InvalidTokenException("Invalid token found during parsing of the formula: " + token.Symbol);
         }
 
         protected void KeyParsingComplete()
@@ -219,10 +244,14 @@ namespace InfHelper.Parsers
 
         protected void ValueParsingComplete()
         {
-            if (curentValue != null)
+            if (!string.IsNullOrEmpty(keyTmpValue))
             {
-                currentKey.KeyValues.Add(curentValue);
-                curentValue = null;
+                var keyValue = new KeyValue
+                {
+                    Value = keyTmpValue
+                };
+                currentKey.KeyValues.Add(keyValue);
+                keyTmpValue = null;
             }
         }
 
@@ -239,10 +268,26 @@ namespace InfHelper.Parsers
         {
             if (!string.IsNullOrEmpty(keyTmpValue))
             {
-                currentKey.KeyValues = KeyValues.GetKeyValuesFrom(keyTmpValue);
+                //TODO Implement this
+                //currentKey.KeyValues = KeyValues.GetKeyValuesFrom(keyTmpValue);
                 keyTmpValue = null;
                 KeyParsingComplete();
             }
+        }
+
+        protected void KeyIdParsingCompleted()
+        {
+            //check for trailing white spaces
+            for (var i = keyTmpValue.Length - 1; i >= 0 ; i--)
+            {
+                if (char.IsWhiteSpace(keyTmpValue[i]))
+                {
+                    keyTmpValue = keyTmpValue.Remove(i, 1);
+                }
+            }
+
+            currentKey.Id = keyTmpValue;
+            keyTmpValue = null;
         }
 
         private void ClearAllMyCallbacks()
@@ -252,5 +297,6 @@ namespace InfHelper.Parsers
             parser.ValidTokenFound -= ValidTokenFoundDuringKeyIdParsing;
             parser.ValidTokenFound -= ValidTokenFoundDuringKeyValueParsing;
         }
+
     }
 }

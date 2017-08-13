@@ -11,17 +11,4 @@ namespace InfHelper.Models
         public bool IsDynamic => Value.StartsWith("%") && Value.EndsWith("%");
         public string DynamicKeyId => IsDynamic && Value.Length > 0 ? Value.Substring(1, Value.Length - 2) : null;
     }
-
-    public static class KeyValues
-    {
-        public static KeyValue GetKeyValueFrom(string formula)
-        {
-            return null;
-        }
-
-        public static List<KeyValue> GetKeyValuesFrom(string formula)
-        {
-            return null;
-        }
-    }
 }

@@ -62,7 +62,10 @@ namespace InfHelperTests.Parsers
 
             Assert.IsTrue(categories.First().Name == "Category");
             var key = categories.First().Keys.First();
-            Assert.IsTrue(key.Id == "Key" && key.KeyValues.Count == 1 && key.KeyValues.First().Value == "Value");
+
+            Assert.IsTrue(string.Equals(key.Id, "Key", StringComparison.Ordinal));
+            Assert.IsTrue(key.KeyValues.Count == 1);
+            Assert.IsTrue(string.Equals(key.KeyValues[0].Value, "Value", StringComparison.Ordinal));
         }
     }
 }
