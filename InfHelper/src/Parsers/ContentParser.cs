@@ -217,7 +217,9 @@ namespace InfHelper.Parsers
                     {
                         throw new InvalidTokenException("Key value or line concatenator (\\) not found.");
                     }
+                    ValueParsingComplete();
                     KeyParsingComplete();
+                    InitKeyIdParsing();
                     break;
                 case TokenType.WhiteSpace:
                     if (string.IsNullOrEmpty(keyTmpValue))

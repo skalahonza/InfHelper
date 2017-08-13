@@ -67,5 +67,32 @@ namespace InfHelperTests.Parsers
             Assert.IsTrue(key.KeyValues.Count == 1);
             Assert.IsTrue(string.Equals(key.KeyValues[0].Value, "Value", StringComparison.Ordinal));
         }
+
+        [TestMethod()]
+        public void SimpleCategoryWithMultipleSimpleKeys()
+        {
+            string formula = "[Category]";// \n Key = Value \n Key1 = Value1 \n Key2 = Value2 \n Key3 = Value3";
+            int Keys_Count = 4;
+            for (int i = 0; i < Keys_Count; i++)
+            {
+                formula = string.Concat(formula, $" \n Key{i} = Value{i}");
+            }
+            var parser = new ContentParser();
+
+            var categories = new List<Category>();
+            parser.CategoryDiscovered += (sender, category) => categories.Add(category);
+            parser.Parse(formula);
+
+            var firstCategory = categories.First();
+
+            Assert.IsTrue(firstCategory.Name == "Category");
+            Assert.IsTrue(firstCategory.Keys.Count == 4);
+
+            for (var i = 0; i < Keys_Count; i++)
+            {
+                Assert.IsTrue(firstCategory.Keys[i].Id == $"Key{i}");
+                Assert.IsTrue(firstCategory.Keys[i].KeyValues.First().Value == $"Value{i}" );
+            }
+        }
     }
 }
