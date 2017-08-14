@@ -117,5 +117,29 @@ namespace InfHelperTests.Parsers
             Assert.AreEqual(firstCategory.Keys[0].KeyValues.First().Value, "netvwifibus.inf");
             Assert.AreEqual(firstCategory.Keys[1].KeyValues.First().Value, "VWiFiBus.Services");
         }
+
+        [TestMethod()]
+        public void SimpleCategoryWithOneMultiValueKey()
+        {
+            string formula =
+                "[Install_MPCIEX_GENM2_D_REV_61_7265_BGN_2x2_HMC_WINT_64_BGN15.Services] \r\n AddService     = Netwtw04, 2, NIC_Service_WINT_64, Common_EventLog_WINT_64";
+
+            var parser = new ContentParser();
+
+            var categories = new List<Category>();
+            parser.CategoryDiscovered += (sender, category) => categories.Add(category);
+            parser.Parse(formula);
+
+            var firstCategory = categories.First();
+
+            Assert.AreEqual(firstCategory.Name, "Install_MPCIEX_GENM2_D_REV_61_7265_BGN_2x2_HMC_WINT_64_BGN15.Services");
+            Assert.AreEqual(firstCategory.Keys[0].Id, "AddService");
+            var values = firstCategory.Keys.First().KeyValues;
+
+            Assert.AreEqual(values[0].Value, "Netwtw04");
+            Assert.AreEqual(values[1].Value, "2");
+            Assert.AreEqual(values[2].Value, "NIC_Service_WINT_64");
+            Assert.AreEqual(values[3].Value, "Common_EventLog_WINT_64");
+        }
     }
 }

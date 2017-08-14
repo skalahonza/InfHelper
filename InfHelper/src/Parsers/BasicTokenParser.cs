@@ -55,6 +55,7 @@ namespace InfHelper.Parsers
             new WhiteSpaceToken(),
             new LineConcatenatorToken(),
             new LetterToken(),
+            new ValueSeparatorToken(),
         };
 
         public virtual void ParseFormula(string formula)
