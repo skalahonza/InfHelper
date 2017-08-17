@@ -69,6 +69,38 @@
       <Name>InfHelper</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="infs\oem100.inf" />
+    <Content Include="infs\oem106.inf" />
+    <Content Include="infs\oem11.inf" />
+    <Content Include="infs\oem12.inf" />
+    <Content Include="infs\oem120.inf" />
+    <Content Include="infs\oem127.inf" />
+    <Content Include="infs\oem136.inf" />
+    <Content Include="infs\oem144.inf" />
+    <Content Include="infs\oem145.inf" />
+    <Content Include="infs\oem147.inf" />
+    <Content Include="infs\oem15.inf" />
+    <Content Include="infs\oem150.inf" />
+    <Content Include="infs\oem20.inf" />
+    <Content Include="infs\oem21.inf" />
+    <Content Include="infs\oem28.inf" />
+    <Content Include="infs\oem35.inf" />
+    <Content Include="infs\oem38.inf" />
+    <Content Include="infs\oem4.inf" />
+    <Content Include="infs\oem45.inf" />
+    <Content Include="infs\oem46.inf" />
+    <Content Include="infs\oem48.inf" />
+    <Content Include="infs\oem50.inf" />
+    <Content Include="infs\oem58.inf" />
+    <Content Include="infs\oem60.inf" />
+    <Content Include="infs\oem61.inf" />
+    <Content Include="infs\oem63.inf" />
+    <Content Include="infs\oem84.inf" />
+    <Content Include="infs\oem94.inf" />
+    <Content Include="infs\oem96.inf" />
+    <Content Include="infs\oem98.inf" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

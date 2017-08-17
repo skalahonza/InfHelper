@@ -1,0 +1,144 @@
+; WirelessButtonDriver.INF file
+; Installs the HP Wireless Button Driver
+; Copyright (c) 2013-2015 HP Development Company, L.P.
+
+[Version]
+Signature="$Windows NT$"
+Class=HIDClass
+ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+Provider=%Company%
+CatalogFile.ntx86=wirelessbuttondriver86.cat
+CatalogFile.ntamd64=wirelessbuttondriver64.cat
+DriverVer=04/11/2016,1.1.17.1
+CatalogFile=wirelessbuttondriver64.cat
+
+[SourceDisksNames.x86]
+1=%DiskId%
+
+[SourceDisksNames.amd64]
+1=%DiskId%
+
+[SourceDisksFiles.x86]
+WirelessButtonDriver86.sys = 1
+HPRadioMgr86.exe = 1
+
+[SourceDisksFiles.amd64]
+WirelessButtonDriver64.sys = 1
+HPRadioMgr64.exe = 1
+
+[DestinationDirs]
+SYS.CopyList.ntx86=10,system32\drivers
+SYS.CopyList.ntamd64=10,system32\drivers
+EXE.CopyList.ntx86=16422,HP\HP Wireless Button Driver
+EXE.CopyList.ntamd64=16426,HP\HP Wireless Button Driver
+
+[Manufacturer]
+%Mfg%=HP,ntx86,ntamd64
+
+[HP.ntx86]
+%DeviceDesc% = HPWirelessButtonDriverInstall.ntx86, ACPI\HPQ6001
+
+[HP.ntamd64]
+%DeviceDesc% = HPWirelessButtonDriverInstall.ntamd64, ACPI\HPQ6001
+
+[HPWirelessButtonDriverInstall.ntx86]
+CopyFiles=SYS.CopyList.ntx86, EXE.CopyList.ntx86
+
+[HPWirelessButtonDriverInstall.ntamd64]
+CopyFiles=SYS.CopyList.ntamd64, EXE.CopyList.ntamd64
+
+[SYS.CopyList.ntx86]
+WirelessButtonDriver86.sys
+
+[EXE.CopyList.ntx86]
+HPRadioMgr86.exe,,,0x00000008
+
+[SYS.CopyList.ntamd64]
+WirelessButtonDriver64.sys
+
+[EXE.CopyList.ntamd64]
+HPRadioMgr64.exe,,,0x00000008
+
+[HPWirelessButtonDriverInstall.ntx86.Services]
+AddService = WirelessButtonDriver86,%SPSVCINST_ASSOCSERVICE%,HPWirelessButtonDriverInstall_Service_Inst86, HPWirelessButtonDriver_EventLog_Inst86
+
+[HPWirelessButtonDriverInstall.ntamd64.Services]
+AddService = WirelessButtonDriver64,%SPSVCINST_ASSOCSERVICE%,HPWirelessButtonDriverInstall_Service_Inst64, HPWirelessButtonDriver_EventLog_Inst64
+
+[HPWirelessButtonDriverInstall_Service_Inst86]
+DisplayName   = %ServiceDesc%
+ServiceType   = %SERVICE_KERNEL_DRIVER%
+StartType     = %SERVICE_DEMAND_START%
+ErrorControl  = %SERVICE_ERROR_NORMAL%
+LoadOrderGroup = "Base"
+ServiceBinary = %12%\WirelessButtonDriver86.sys
+
+[HPWirelessButtonDriverInstall_Service_Inst64]
+DisplayName   = %ServiceDesc%
+ServiceType   = %SERVICE_KERNEL_DRIVER%
+StartType     = %SERVICE_DEMAND_START%
+ErrorControl  = %SERVICE_ERROR_NORMAL%
+LoadOrderGroup = "Base"
+ServiceBinary = %12%\WirelessButtonDriver64.sys
+
+[HPWirelessButtonDriver_EventLog_Inst86] 
+AddReg = HPWirelessButtonDriver_EventLog_Inst86.AddReg 
+ 
+[HPWirelessButtonDriver_EventLog_Inst86.AddReg] 
+HKR,,EventMessageFile,%REG_EXPAND_SZ%,"%%SystemRoot%%\System32\drivers\WirelessButtonDriver86.sys" 
+HKR,,TypesSupported,%REG_DWORD%,7
+
+[HPWirelessButtonDriver_EventLog_Inst64] 
+AddReg = HPWirelessButtonDriver_EventLog_Inst64.AddReg 
+ 
+[HPWirelessButtonDriver_EventLog_Inst64.AddReg] 
+HKR,,EventMessageFile,%REG_EXPAND_SZ%,"%%SystemRoot%%\System32\drivers\WirelessButtonDriver64.sys" 
+HKR,,TypesSupported,%REG_DWORD%,7
+
+[Strings]
+Mfg = "HP"
+DeviceDesc = "HP Wireless Button Driver"
+ServiceDesc = "HP Wireless Button Driver Service"
+DiskId = "Install disk (1)"
+Company = "HP"
+
+REG_EXPAND_SZ          = 0x00020000
+REG_DWORD              = 0x00010001
+
+;
+; The "standard" defines
+;
+SPSVCINST_TAGTOFRONT               = 0x00000001
+SPSVCINST_ASSOCSERVICE             = 0x00000002
+SPSVCINST_DELETEEVENTLOGENTRY      = 0x00000004
+SPSVCINST_NOCLOBBER_DISPLAYNAME    = 0x00000008
+SPSVCINST_NOCLOBBER_STARTTYPE      = 0x00000010
+SPSVCINST_NOCLOBBER_ERRORCONTROL   = 0x00000020
+SPSVCINST_NOCLOBBER_LOADORDERGROUP = 0x00000040
+SPSVCINST_NOCLOBBER_DEPENDENCIES   = 0x00000080
+SPSVCINST_NOCLOBBER_DESCRIPTION    = 0x00000100
+
+COPYFLG_WARN_IF_SKIP         = 0x00000001
+COPYFLG_NOSKIP               = 0x00000002
+COPYFLG_NOVERSIONCHECK       = 0x00000004
+COPYFLG_FORCE_FILE_IN_USE    = 0x00000008
+COPYFLG_NO_OVERWRITE         = 0x00000010
+COPYFLG_NO_VERSION_DIALOG    = 0x00000020
+COPYFLG_OVERWRITE_OLDER_ONLY = 0x00000040
+COPYFLG_REPLACEONLY          = 0x00000400
+COPYFLG_REPLACE_BOOT_FILE    = 0x00001000
+COPYFLG_NOPRUNE              = 0x00002000
+
+SERVICE_KERNEL_DRIVER      = 0x00000001
+SERVICE_FILE_SYSTEM_DRIVER = 0x00000002
+
+SERVICE_BOOT_START   = 0x00000000
+SERVICE_SYSTEM_START = 0x00000001
+SERVICE_AUTO_START   = 0x00000002
+SERVICE_DEMAND_START = 0x00000003
+SERVICE_DISABLED     = 0x00000004
+
+SERVICE_ERROR_IGNORE   = 0x00000000
+SERVICE_ERROR_NORMAL   = 0x00000001
+SERVICE_ERROR_SEVERE   = 0x00000002
+SERVICE_ERROR_CRITICAL = 0x00000003

@@ -1,0 +1,125 @@
+;=========================================== 
+; BenQ_EW2430.INF 11/11/10 Ver. 1.0 
+; INF File for Windows 9x/Me/2000/XP/Vista/7
+; Copyright (c) 2010, BENQ Corporation
+;===========================================
+;
+[version]
+signature="$CHICAGO$"
+Class=Monitor
+ClassGuid={4D36E96E-E325-11CE-BFC1-08002BE10318}
+Provider=%BenQ%
+catalogfile=EW2430.cat
+DriverVer=11/11/2010,1.0
+
+
+
+[ControlFlags]
+ExcludeFromSelect.NT=Monitor\BNQ7924
+ExcludeFromSelect.NT=Monitor\BNQ7925
+
+
+[DestinationDirs]
+DefaultDestDir  = 11
+EW2430_Analog.copyfiles = 23
+EW2430_Digital.copyfiles = 23
+
+[SourceDisksNames]
+1=%diskname%,,
+
+[SourceDisksFiles]
+EW2430Analog.icm=1
+EW2430Digital.icm=1
+
+; Manufacturers
+;-------------------------------------------------
+
+[Manufacturer]
+%BenQ%=BenQ,NTx86,NTAMD64
+
+
+; Manufacturer sections
+;-------------------------------------------------
+[BenQ] 
+%EW2430_Analog%=EW2430_Analog.Install, Monitor\BNQ7924
+%EW2430_Digital%=EW2430_Digital.Install, Monitor\BNQ7925
+
+;-------------------------------------------------
+ [BenQ.NTx86] 
+%EW2430_Analog%=EW2430_Analog.Install, Monitor\BNQ7924
+%EW2430_Digital%=EW2430_Digital.Install, Monitor\BNQ7925
+
+;-------------------------------------------------
+ [BenQ.NTAMD64] 
+%EW2430_Analog%=EW2430_Analog.Install, Monitor\BNQ7924
+%EW2430_Digital%=EW2430_Digital.Install, Monitor\BNQ7925
+
+; Install Sections
+;-------------------------------------------------
+
+[EW2430_Analog.Install]
+DelReg=DEL_CURRENT_REG
+AddReg=EW2430_Analog.AddReg, 1920, DPMS
+CopyFiles=EW2430_Analog.CopyFiles
+
+[EW2430_Digital.Install]
+DelReg=DEL_CURRENT_REG
+AddReg=EW2430_Digital.AddReg, 1920, DPMS
+CopyFiles=EW2430_Digital.CopyFiles
+
+; AddReg & DelReg sections
+;-------------------------------------------------
+
+
+[DEL_CURRENT_REG]
+HKR,MODES
+HKR,,MaxResolution
+HKR,,DPMS
+HKR,,ICMProfile
+
+[1920]
+HKR,,MaxResolution,,"1920,1080"
+
+[DPMS]
+HKR,,DPMS,,1
+
+; AddReg sections
+;----------------------------------------------------------------------------------
+
+
+[EW2430_Analog.AddReg]
+HKR,"MODES\640,480",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,"MODES\800,600",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,"MODES\1024,768",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,"MODES\1280,1024",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,"MODES\1680,1050",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,"MODES\1920,1080",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,,ICMProfile,0,"EW2430Analog.icm"
+
+[EW2430_Digital.AddReg]
+HKR,"MODES\640,480",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,"MODES\800,600",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,"MODES\1024,768",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,"MODES\1280,1024",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,"MODES\1680,1050",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,"MODES\1920,1080",Mode1,,"30.0-83.0,50.0-76.0,+,+"
+HKR,,ICMProfile,0,"EW2430Digital.icm"
+
+
+
+[EW2430_Analog.CopyFiles]
+EW2430Analog.ICM
+
+
+[EW2430_Digital.CopyFiles]
+EW2430Digital.ICM
+
+
+
+[Strings]
+MonitorClassName="Monitor"
+BenQ="BenQ"
+diskname="BenQ LCD Monitor installation diskette"
+EW2430_Analog="BenQ EW2430 (Analog)"
+EW2430_Digital="BenQ EW2430 (Digital)"
+

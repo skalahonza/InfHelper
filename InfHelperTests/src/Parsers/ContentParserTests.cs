@@ -141,5 +141,44 @@ namespace InfHelperTests.Parsers
             Assert.AreEqual(values[2].Value, "NIC_Service_WINT_64");
             Assert.AreEqual(values[3].Value, "Common_EventLog_WINT_64");
         }
+
+        [TestMethod()]
+        public void SimpleCategoryWithMultipleMultiValueKeys()
+        {
+            string formula =
+                "[Intel.NTAMD64.6.2]\r\n%IntcAudDeviceDesc% = IntcAudModel, HDAUDIO\\FUNC_01&VEN_8086&DEV_2809&SUBSYS_80860101, HDAUDIO\\FUNC_01&VEN_8086&DEV_2809\r\n%IntcAudDeviceDesc% = IntcAudModel, INTELAUDIO\\FUNC_01&VEN_8086&DEV_2809&SUBSYS_80860101, INTELAUDIO\\FUNC_01&VEN_8086&DEV_2809\r\n%IntcAudDeviceDesc% = IntcAudModel, HDAUDIO\\FUNC_01&VEN_8086&DEV_280A&SUBSYS_80860101, HDAUDIO\\FUNC_01&VEN_8086&DEV_280A";
+
+            var parser = new ContentParser();
+
+            var categories = new List<Category>();
+            parser.CategoryDiscovered += (sender, category) => categories.Add(category);
+            parser.Parse(formula);
+
+            var firstCategory = categories.First();
+
+            Assert.AreEqual(firstCategory.Name, "Intel.NTAMD64.6.2");
+            Assert.IsTrue(firstCategory.Keys.Count == 3);
+
+            //first key
+            var key = firstCategory.Keys[0];
+            Assert.AreEqual(key.Id, "%IntcAudDeviceDesc%");
+            Assert.AreEqual(key.KeyValues[0].Value, "IntcAudModel");
+            Assert.AreEqual(key.KeyValues[1].Value, "HDAUDIO\\FUNC_01&VEN_8086&DEV_2809&SUBSYS_80860101");
+            Assert.AreEqual(key.KeyValues[2].Value, "HDAUDIO\\FUNC_01&VEN_8086&DEV_2809");
+
+            //second key
+            key = firstCategory.Keys[1];
+            Assert.AreEqual(key.Id, "%IntcAudDeviceDesc%");
+            Assert.AreEqual(key.KeyValues[0].Value, "IntcAudModel");
+            Assert.AreEqual(key.KeyValues[1].Value, "INTELAUDIO\\FUNC_01&VEN_8086&DEV_2809&SUBSYS_80860101");
+            Assert.AreEqual(key.KeyValues[2].Value, "INTELAUDIO\\FUNC_01&VEN_8086&DEV_2809");
+
+            //third key
+            key = firstCategory.Keys[2];
+            Assert.AreEqual(key.Id, "%IntcAudDeviceDesc%");
+            Assert.AreEqual(key.KeyValues[0].Value, "IntcAudModel");
+            Assert.AreEqual(key.KeyValues[1].Value, "HDAUDIO\\FUNC_01&VEN_8086&DEV_280A&SUBSYS_80860101");
+            Assert.AreEqual(key.KeyValues[2].Value, "HDAUDIO\\FUNC_01&VEN_8086&DEV_280A");
+        }
     }
 }

@@ -1,0 +1,220 @@
+;
+; ACCELEROMETER.INF file
+;
+; Installs the HP ACCELEROMETER driver
+;
+; © Copyright 2015 HP Development Company, L.P.
+;
+[Version]
+signature="$WINDOWS NT$"
+Class=System
+ClassGuid = {4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider=%Company%
+CatalogFile.ntx86=hpqaccx86.cat
+CatalogFile.ntamd64=hpqaccamd64.cat
+DriverVer=09/23/2016,6.0.19.1
+CatalogFile=hpqaccx64.cat
+
+[SourceDisksNames.x86]
+1=%DiskId%
+
+[SourceDisksNames.amd64]
+1=%DiskId%
+
+[SourceDisksFiles.x86]
+accelerometer.sys = 1,x86
+hpdskflt.sys=1,x86
+hpservice.exe = 1,x86
+accelerometerdll.DLL=1,x86
+HPMDPCoInst.dll=1,x86
+
+[SourceDisksFiles.amd64]
+accelerometer.sys = 1,amd64
+hpdskflt.sys=1,amd64
+hpservice.exe=1,amd64
+accelerometerdll.DLL=1,amd64
+HPMDPCoInst.dll=1,amd64
+
+[DestinationDirs]
+SYS.CopyList.ntx86=10,system32\drivers
+EXE.CopyList.ntx86=10,system32
+SYS.CopyList.ntamd64=10,system32\drivers
+EXE.CopyList.ntamd64=10,system32
+HPAccelerometerDriver_Coinstaller.CopyFiles.ntx86 = 11  ; DIRID_SYSTEM
+HPAccelerometerDriver_Coinstaller.CopyFiles.ntamd64 = 11  ; DIRID_SYSTEM
+
+[Manufacturer]
+%Mfg%=HP,ntx86,ntamd64
+
+[HP.ntx86]
+%DeviceDesc% = HPAccelerometerDriverInstall.ntx86, ACPI\HPQ6007
+
+[HP.ntamd64]
+%DeviceDesc% = HPAccelerometerDriverInstall.ntamd64, ACPI\HPQ6007
+
+[HPAccelerometerDriverInstall.ntx86]
+CopyFiles=SYS.CopyList.ntx86,EXE.CopyList.ntx86
+
+[HPAccelerometerDriverInstall.ntamd64]
+CopyFiles=SYS.CopyList.ntamd64,EXE.CopyList.ntamd64
+
+[SYS.CopyList.ntx86]
+Accelerometer.sys
+hpdskflt.sys,,,0x00001000
+
+[EXE.CopyList.ntx86]
+hpservice.exe,,,0x00000008
+accelerometerdll.DLL,,,0x00000008
+
+[SYS.CopyList.ntamd64]
+Accelerometer.sys
+hpdskflt.sys,,,0x00001000
+
+[EXE.CopyList.ntamd64]
+hpservice.exe,,,0x00000008
+accelerometerdll.DLL,,,0x00000008
+
+[HPAccelerometerDriverInstall.ntx86.Services]
+AddService = Accelerometer,%SPSVCINST_ASSOCSERVICE%,HPAccelerometerDriver_Service_Inst
+AddService = hpdskflt,,hpdskflt.Service.Install
+AddService = hpsrv,,hpservice.Service.Install
+
+[HPAccelerometerDriverInstall.ntamd64.Services]
+AddService = Accelerometer,%SPSVCINST_ASSOCSERVICE%,HPAccelerometerDriver_Service_Inst
+AddService = hpdskflt,,hpdskflt.Service.Install
+AddService = hpsrv,,hpservice.Service.Install
+
+[HPAccelerometerDriver_Service_Inst]
+DisplayName    = %accelerometer_desc%
+ServiceType    = %SERVICE_KERNEL_DRIVER%
+StartType      = %SERVICE_DEMAND_START%
+ErrorControl   = %SERVICE_ERROR_NORMAL%
+LoadOrderGroup = "Base"
+ServiceBinary  = %12%\Accelerometer.sys 
+AddReg         = HPAccelerometerDriver.NT.Services.AddReg, HPAccelerometerDriver.Settings.NT.Services.AddReg
+
+[hpdskflt.Service.Install]
+DisplayName    = %service_desc%
+ServiceType    = %SERVICE_KERNEL_DRIVER%
+StartType      = %SERVICE_BOOT_START%
+ErrorControl   = %SERVICE_ERROR_NORMAL%
+ServiceBinary  = %12%\hpdskflt.sys
+LoadOrderGroup = "PnP Filter"
+AddReg         = HPdskflt.NT.Services.AddReg
+
+[hpservice.Service.Install]
+DisplayName    = %hpservice_desc%
+ServiceType    = 0x00000010
+StartType      = %SERVICE_AUTO_START%
+ErrorControl   = %SERVICE_ERROR_NORMAL%
+LoadOrderGroup = "UIGroup"
+ServiceBinary  = %10%\system32\Hpservice.exe
+Description    = "HP 3D Driveguard Service"
+
+;[hpdskflt.ErrorLog.Install]
+;AddReg = hpdskflt
+
+;[hpdskflt]
+;HKR,,EventMessageFile,%REG_EXPAND_SZ%,"%%SystemRoot%%\System32\drivers\hpdskflt.sys"
+;HKR,,TypesSupported,%REG_DWORD%,7
+
+[HPdskflt.NT.Services.AddReg]
+HKR, Parameters, SecondDriveNotSupported, 0x10001, 0
+
+[HPAccelerometerDriver.NT.Services.AddReg]
+HKR, Parameters, ShockEventDurationLong, 0x10001, 20000
+HKR, Parameters, ShockEventDurationShort, 0x10001, 2000
+HKR, Parameters, ClearInterruptInSoftware, 0x10001, 1
+HKR, Parameters, CreateErrorLogEntries, 0x10001, 0
+HKR, Parameters, ErrorLogLimit, 0x10001, 10
+HKR, Parameters, Enabled, 0x10001, 1
+HKR, Parameters, DisableFastParkOnLidOpen, 0x10001, 1
+HKR, Parameters, UseStandardModeOnly, 0x10001, 1
+HKR, Statistics, ShocksDetected, 0x10001, 0
+HKLM, System\CurrentControlSet\Control\Class\{4d36e967-e325-11ce-bfc1-08002be10318}, LowerFilters, 0x00010008, hpdskflt
+
+[HPAccelerometerDriver.Settings.NT.Services.AddReg]
+HKR, Settings, SettingsCanChange, 0x10001, 1
+HKR, Settings, InstanceIndex, 0x10001, 45
+
+[HPAccelerometerDriver.Settings.NT.Services.AddReg.security]
+;                D:P Protected DACL (SE_DACL_PROTECTED Flag is Set)
+;                A = Access Allowed
+;	              OI = Object Inherit
+;                CI = Container Inherit
+;                SY = Local System
+;                BA = Built-in Administrator
+;                GR = Generic Read
+;                LS = Local Service Account 
+;                KA = Key all access
+;                KR = Key Read
+"D:P(A;OICI;KAKR;;;SY)(A;OICI;KAKR;;;BA)(A;OICI;KAKR;;;LS)"
+;
+; Coinstaller sections
+;
+[HPAccelerometerDriverInstall.ntx86.CoInstallers]
+AddReg = HPAccelerometerDriver.CoInstallers.AddReg 
+CopyFiles=HPAccelerometerDriver_Coinstaller.CopyFiles.ntx86
+
+[HPAccelerometerDriverInstall.ntamd64.CoInstallers]
+AddReg = HPAccelerometerDriver.CoInstallers.AddReg
+CopyFiles=HPAccelerometerDriver_Coinstaller.CopyFiles.ntamd64
+
+[HPAccelerometerDriver.CoInstallers.AddReg]
+HKR,,CoInstallers32,0x00010000,"HPMDPCoInst.dll,HPMDPCoInstall"
+
+[HPAccelerometerDriver_Coinstaller.CopyFiles.ntx86]
+HPMDPCoInst.dll
+
+[HPAccelerometerDriver_Coinstaller.CopyFiles.ntamd64]
+HPMDPCoInst.dll
+
+[Strings]
+Mfg = "HP"
+DeviceDesc = "HP Mobile Data Protection Sensor"
+accelerometer_desc = "HP Mobile Data Protection Sensor"
+service_desc = "HP Filter"
+hpservice_desc = "HP Service"
+DiskId = "Install disk (1)"
+Company = "HP Development Company, L.P."
+
+REG_EXPAND_SZ          = 0x00020000
+REG_DWORD              = 0x00010001
+
+;
+; The "standard" defines
+;
+SPSVCINST_TAGTOFRONT               = 0x00000001
+SPSVCINST_ASSOCSERVICE             = 0x00000002
+SPSVCINST_DELETEEVENTLOGENTRY      = 0x00000004
+SPSVCINST_NOCLOBBER_DISPLAYNAME    = 0x00000008
+SPSVCINST_NOCLOBBER_STARTTYPE      = 0x00000010
+SPSVCINST_NOCLOBBER_ERRORCONTROL   = 0x00000020
+SPSVCINST_NOCLOBBER_LOADORDERGROUP = 0x00000040
+SPSVCINST_NOCLOBBER_DEPENDENCIES   = 0x00000080
+SPSVCINST_NOCLOBBER_DESCRIPTION    = 0x00000100
+
+COPYFLG_WARN_IF_SKIP         = 0x00000001
+COPYFLG_NOSKIP               = 0x00000002
+COPYFLG_NOVERSIONCHECK       = 0x00000004
+COPYFLG_FORCE_FILE_IN_USE    = 0x00000008
+COPYFLG_NO_OVERWRITE         = 0x00000010
+COPYFLG_NO_VERSION_DIALOG    = 0x00000020
+COPYFLG_OVERWRITE_OLDER_ONLY = 0x00000040
+COPYFLG_REPLACEONLY          = 0x00000400
+COPYFLG_REPLACE_BOOT_FILE    = 0x00001000
+COPYFLG_NOPRUNE              = 0x00002000
+
+SERVICE_KERNEL_DRIVER      = 0x00000001
+SERVICE_FILE_SYSTEM_DRIVER = 0x00000002
+
+SERVICE_BOOT_START   = 0x00000000
+SERVICE_SYSTEM_START = 0x00000001
+SERVICE_AUTO_START   = 0x00000002
+SERVICE_DEMAND_START = 0x00000003
+SERVICE_DISABLED     = 0x00000004
+
+SERVICE_ERROR_IGNORE   = 0x00000000
+SERVICE_ERROR_NORMAL   = 0x00000001
+SERVICE_ERROR_SEVERE   = 0x00000002
+SERVICE_ERROR_CRITICAL = 0x00000003

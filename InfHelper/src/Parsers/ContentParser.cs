@@ -114,7 +114,10 @@ namespace InfHelper.Parsers
                 new WhiteSpaceToken(),
             };
 
-            parser.IgnoredTokens?.Clear();
+            parser.IgnoredTokens = new HashSet<IToken>()
+            {
+                new LineConcatenatorToken(),
+            };
         }
 
         //Parsing top layer
