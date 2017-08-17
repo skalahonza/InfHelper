@@ -13,6 +13,7 @@ namespace InfHelper.Parsers
         private Key currentKey;
         private readonly ITokenParser parser;
         private string keyTmpValue;
+        private Action previousParsing;
 
         public ContentParser() : this(new BasicTokenParser())
         {
@@ -44,7 +45,7 @@ namespace InfHelper.Parsers
         /// </summary>
         protected void InitMainParsing()
         {
-            parser.ValidTokenFound -= ValidTokenFoundDuringKeyIdParsing;
+            ClearAllMyCallbacks();
             parser.ValidTokenFound += ValidTokenFoundDuringMainParsing;
 
             parser.AllowedTokens = new HashSet<IToken>
@@ -93,6 +94,8 @@ namespace InfHelper.Parsers
                 new WhiteSpaceToken(),
                 new CategoryOpeningToken(),
                 new NewLineToken(),
+                new ValueSeparatorToken(),
+                new ValueMarkerToken(),
             };
 
             parser.IgnoredTokens = new HashSet<IToken>();
@@ -112,6 +115,7 @@ namespace InfHelper.Parsers
                 new LetterToken(),
                 new NewLineToken(),
                 new WhiteSpaceToken(),
+                new ValueMarkerToken()
             };
 
             parser.IgnoredTokens = new HashSet<IToken>()
@@ -120,13 +124,85 @@ namespace InfHelper.Parsers
             };
         }
 
+        protected void InitPureValueParsing()
+        {
+            ClearAllMyCallbacks();
+            parser.ValidTokenFound += ValidTokenFoundDuringPureValueParsing;
+
+            parser.AllowedTokens = new HashSet<IToken>
+            {
+                new LetterToken(),
+                new ValueMarkerToken(),
+                new WhiteSpaceToken()
+            };
+
+            parser.IgnoredTokens = new HashSet<IToken>()
+            {
+                new LineConcatenatorToken(),
+                new ValueSeparatorToken()
+            };
+        }
+
+        // Parsing value inside ""
+        private void ValidTokenFoundDuringPureValueParsing(object sender, IToken token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.Letter:
+                case TokenType.WhiteSpace:
+                    keyTmpValue += token.Symbol;
+                    break;
+                case TokenType.ValueMarker:
+                    ValueParsingComplete();
+                    InitKeyValueParsing();
+                    break;
+                default:
+                    throw new InvalidTokenException("Invalid token found during comment parsing: " + token.Symbol);
+            }
+        }
+
+        /// <summary>
+        /// Parse comments
+        /// </summary>
+        protected void InitCommentParsing(Action previous)
+        {
+            previousParsing = previous;
+            ClearAllMyCallbacks();
+            parser.ValidTokenFound += ValidTokenFoundDuringCommentParsing;
+
+            parser.AllowedTokens = new HashSet<IToken>
+            {
+                new NewLineToken(),
+            };
+
+            parser.IgnoredTokens = new HashSet<IToken>()
+            {
+                new LetterToken(),
+                new WhiteSpaceToken(),
+            };
+        }
+
+        //Parsing inline comment
+        private void ValidTokenFoundDuringCommentParsing(object sender, IToken token)
+        {
+            switch (token.Type)
+            {
+                case TokenType.NewLine:
+                    previousParsing();
+                    break;
+                default:
+                    throw new InvalidTokenException("Invalid token found during comment parsing: " + token.Symbol);
+            }
+        }
+
         //Parsing top layer
         protected void ValidTokenFoundDuringMainParsing(object sender, IToken token)
         {
             switch (token.Type)
             {
                 case TokenType.InlineComment:
-                    // TODO go to next line
+                    //go to next line, init comment parsing
+                    InitCommentParsing(InitMainParsing);
                     break;
                 case TokenType.CategoryOpening:
                     currentCategory = new Category();
@@ -158,6 +234,12 @@ namespace InfHelper.Parsers
         {
             switch (token.Type)
             {
+                case TokenType.ValueMarker:
+                    InitPureValueParsing();
+                    break;
+                case TokenType.ValueSeparator:
+                    SerializeCurrentTmpValueAsAnonymousKey();
+                    break;
                 case TokenType.NewLine:
                     SerializeCurrentTmpValueAsAnonymousKey();
                     break;
@@ -192,13 +274,13 @@ namespace InfHelper.Parsers
                     }
                     else
                     {
-                        //TODO go to next line
+                        InitCommentParsing(InitKeyIdParsing);
                     }
                     break;
                 default:
                     throw new InvalidTokenException("Invalid token found during parsing of the file: " + token.Symbol);
             }
-        }        
+        }
 
         //When parsing value
         protected void ValidTokenFoundDuringKeyValueParsing(object sender, IToken token)
@@ -206,20 +288,12 @@ namespace InfHelper.Parsers
             switch (token.Type)
             {
                 case TokenType.ValueSeparator:
-                    if (string.IsNullOrEmpty(keyTmpValue))
-                    {
-                        throw new InvalidTokenException("Unexpected value separator occurrence.");
-                    }
                     ValueParsingComplete();
                     break;
                 case TokenType.Letter:
                     keyTmpValue += token.Symbol;
                     break;
                 case TokenType.NewLine:
-                    if (string.IsNullOrEmpty(keyTmpValue))
-                    {
-                        throw new InvalidTokenException("Key value or line concatenator (\\) not found.");
-                    }
                     ValueParsingComplete();
                     KeyParsingComplete();
                     InitKeyIdParsing();
@@ -229,6 +303,9 @@ namespace InfHelper.Parsers
                     {
                         ValueParsingComplete();
                     }
+                    break;
+                case TokenType.ValueMarker:
+                    InitPureValueParsing();
                     break;
             }
         }
@@ -271,19 +348,14 @@ namespace InfHelper.Parsers
 
         protected void SerializeCurrentTmpValueAsAnonymousKey()
         {
-            if (!string.IsNullOrEmpty(keyTmpValue))
-            {
-                //TODO Implement this
-                //currentKey.KeyValues = KeyValues.GetKeyValuesFrom(keyTmpValue);
-                keyTmpValue = null;
-                KeyParsingComplete();
-            }
+            //TODO Implement this
+            keyTmpValue = null;
         }
 
         protected void KeyIdParsingCompleted()
         {
             //check for trailing white spaces
-            for (var i = keyTmpValue.Length - 1; i >= 0 ; i--)
+            for (var i = keyTmpValue.Length - 1; i >= 0; i--)
             {
                 if (char.IsWhiteSpace(keyTmpValue[i]))
                 {
@@ -301,6 +373,8 @@ namespace InfHelper.Parsers
             parser.ValidTokenFound -= ValidTokenFoundDuringCategoryParsing;
             parser.ValidTokenFound -= ValidTokenFoundDuringKeyIdParsing;
             parser.ValidTokenFound -= ValidTokenFoundDuringKeyValueParsing;
+            parser.ValidTokenFound -= ValidTokenFoundDuringCommentParsing;
+            parser.ValidTokenFound -= ValidTokenFoundDuringPureValueParsing;
         }
 
     }

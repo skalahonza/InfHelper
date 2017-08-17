@@ -26,7 +26,7 @@ namespace InfHelper.Parsers
         public event EventHandler<IToken> InvalidTokenFound;
         public event EventHandler<IToken> ValidTokenFound;
 
-        public BasicTokenParser():this(new HashSet<IToken>(), new HashSet<IToken>())
+        public BasicTokenParser() : this(new HashSet<IToken>(), new HashSet<IToken>())
         {
             AllTokens = AllAvailableTokens;
         }
@@ -39,7 +39,7 @@ namespace InfHelper.Parsers
         }
 
         public BasicTokenParser(ISet<IToken> allTokens, ISet<IToken> allowedTokens, ISet<IToken> ignoredTokens)
-        {            
+        {
             AllTokens = allTokens;
             AllowedTokens = allowedTokens;
             IgnoredTokens = ignoredTokens;
@@ -56,17 +56,31 @@ namespace InfHelper.Parsers
             new LineConcatenatorToken(),
             new LetterToken(),
             new ValueSeparatorToken(),
+            new ValueMarkerToken()
         };
 
         public virtual void ParseFormula(string formula)
         {
+            int row = 0, col = 0;
+            string line = "";
+
             foreach (var c in formula)
             {
                 bool found = false;
 
+                if (c == '\n')
+                {
+                    row++;
+                    col = 0;
+                    line = "";
+                }
+                col++;
+                line += c;
+
                 //examine all known tokens
                 foreach (var token in AllTokens)
                 {
+
                     if (!token.Symbols.Contains(c)) continue;
 
                     //token found
@@ -82,7 +96,7 @@ namespace InfHelper.Parsers
                     {
                         InvalidTokenFound?.Invoke(this, token);
                         continue;
-                    }                   
+                    }
 
                     //allowed token detected
                     ValidTokenFound?.Invoke(this, token);
@@ -91,7 +105,8 @@ namespace InfHelper.Parsers
 
                 //token not recognized
                 if (!found)
-                    throw new NoneTokenRecognizedException("None token recognized in given formula: " + formula + Environment.NewLine + "Examined symbol: " + c);
+                    throw new NoneTokenRecognizedException($"None token recognized in row:{row} col:{col}" + Environment.NewLine + "Examined symbol: " + c
+                        + "\nExamined line: " + line);
             }
         }
     }

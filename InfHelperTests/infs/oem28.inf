@@ -1,0 +1,56 @@
+; DTLITEUSBBUS.INF -- DTLITEUSBBUS device .inf for Windows XP and above
+
+[Version]
+signature   = "$WINDOWS NT$"
+Class       = USB
+ClassGUID   = {36FC9E60-C465-11CF-8056-444553540000}
+Provider    = %Vendor%
+CatalogFile = dtliteusbbus.cat
+DriverVer=12/28/2015,3.04.0.0
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames.amd64]
+1 = %MediaDescription%
+
+[SourceDisksFiles]
+dtliteusbbus.sys = 1
+
+[Manufacturer]
+%Vendor% = Vendor, NTamd64
+
+[Vendor.NTamd64]
+%DTLITEUSBBUS.DeviceDesc% = DTLITEUSBBUS, root\dtliteusbbus
+
+[DTLITEUSBBUS.NTamd64]
+CopyFiles = Drivers_Dir
+
+[DTLITEUSBBUS.NTamd64.HW]
+AddReg = DTLITEUSBBUS.NTamd64.AddReg
+
+[DTLITEUSBBUS.NTamd64.AddReg]
+HKR,,DeviceCharacteristics,0x10001,0x0100         ; Use same security checks on relative opens
+HKR,,Security,,"D:P(A;;GA;;;SY)(A;;GA;;;BA)"      ; Allow generic-all access to Local system and Built-in administrators
+
+[DTLITEUSBBUS.NTamd64.Services]
+AddService = dtliteusbbus, 2, DTLITEUSBBUS_ServiceInstall
+
+[DTLITEUSBBUS_ServiceInstall]
+DisplayName    = %DTLITEUSBBUS.DeviceDesc%
+ServiceType    = 1
+StartType      = 3
+ErrorControl   = 1
+ServiceBinary  = %12%\dtliteusbbus.sys
+LoadOrderGroup = Extended Base
+
+[Drivers_Dir]
+dtliteusbbus.sys
+
+;
+; Strings
+;
+[Strings]
+MediaDescription          = "DAEMON Tools Lite Virtual USB Bus Driver"
+Vendor                    = "Disc Soft Ltd"
+DTLITEUSBBUS.DeviceDesc   = "DAEMON Tools Lite Virtual USB Bus"

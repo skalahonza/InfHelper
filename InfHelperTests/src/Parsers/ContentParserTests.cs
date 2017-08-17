@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using InfHelper.Models;
 using InfHelper.Parsers;
@@ -10,6 +11,8 @@ namespace InfHelperTests.Parsers
     [TestClass()]
     public class ContentParserTests
     {
+        private const string testFolder = "..\\..\\infs";
+
         [TestMethod()]
         public void CategoryParsing()
         {
@@ -179,6 +182,16 @@ namespace InfHelperTests.Parsers
             Assert.AreEqual(key.KeyValues[0].Value, "IntcAudModel");
             Assert.AreEqual(key.KeyValues[1].Value, "HDAUDIO\\FUNC_01&VEN_8086&DEV_280A&SUBSYS_80860101");
             Assert.AreEqual(key.KeyValues[2].Value, "HDAUDIO\\FUNC_01&VEN_8086&DEV_280A");
+        }
+
+        [TestMethod]
+        public void RealLifeFileTest()
+        {
+            var content = File.ReadAllText(Path.Combine(testFolder, "oem100.inf"));
+            var parser = new ContentParser();
+            var categories = new List<Category>();
+            parser.CategoryDiscovered += (sender, category) => categories.Add(category);
+            parser.Parse(content);
         }
     }
 }

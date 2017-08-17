@@ -1,0 +1,56 @@
+; DTLITESCSIBUS.INF -- DTLITESCSIBUS device .inf for Windows XP and above
+
+[Version]
+signature   = "$WINDOWS NT$"
+Class       = SCSIAdapter
+ClassGUID   = {4D36E97B-E325-11CE-BFC1-08002BE10318}
+Provider    = %Vendor%
+CatalogFile = dtlitescsibus.cat
+DriverVer=09/24/2015,5.28.0.0
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames.amd64]
+1 = %MediaDescription%
+
+[SourceDisksFiles]
+dtlitescsibus.sys = 1
+
+[Manufacturer]
+%Vendor% = Vendor, NTamd64
+
+[Vendor.NTamd64]
+%DTLITESCSIBUS.DeviceDesc% = DTLITESCSIBUS, root\dtlitescsibus
+
+[DTLITESCSIBUS.NTamd64]
+CopyFiles = Drivers_Dir
+
+[DTLITESCSIBUS.NTamd64.HW]
+AddReg = DTLITESCSIBUS.NTamd64.AddReg
+
+[DTLITESCSIBUS.NTamd64.AddReg]
+HKR,,DeviceCharacteristics,0x10001,0x0100         ; Use same security checks on relative opens
+HKR,,Security,,"D:P(A;;GA;;;SY)(A;;GA;;;BA)"      ; Allow generic-all access to Local system and Built-in administrators
+
+[DTLITESCSIBUS.NTamd64.Services]
+AddService = dtlitescsibus, 2, DTLITESCSIBUS_ServiceInstall
+
+[DTLITESCSIBUS_ServiceInstall]
+DisplayName    = %DTLITESCSIBUS.DeviceDesc%
+ServiceType    = 1
+StartType      = 3
+ErrorControl   = 1
+ServiceBinary  = %12%\dtlitescsibus.sys
+LoadOrderGroup = SCSI Miniport
+
+[Drivers_Dir]
+dtlitescsibus.sys
+
+;
+; Strings
+;
+[Strings]
+MediaDescription         = "DAEMON Tools Lite Virtual SCSI Bus Driver"
+Vendor                   = "Disc Soft Ltd"
+DTLITESCSIBUS.DeviceDesc = "DAEMON Tools Lite Virtual SCSI Bus"

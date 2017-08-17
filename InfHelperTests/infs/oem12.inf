@@ -1,0 +1,74 @@
+; Installation file for the NVIDIA Virtual Host Controller Interface driver
+;
+; (C) 2017 NVIDIA Corporation. All rights reserved.
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System
+ClassGuid={4D36E97D-E325-11CE-BFC1-08002BE10318}
+Provider=%MfgName%
+DriverVer = 12/27/2016,2.02.2151.6378
+CatalogFile=nvvhci.cat
+
+[Manufacturer]
+%MfgName%=nvvhci,ntx86,ntamd64
+
+[nvvhci.ntx86]
+%DeviceDesc%=NVVHCI_Device, root\nvvhci
+
+[nvvhci.ntamd64]
+%DeviceDesc%=NVVHCI_Device, root\nvvhci
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames]
+1 = %DiskId1%,,,""
+
+[SourceDisksFiles]
+nvvhci32.sys  = 1,,
+nvvhci64.sys  = 1,,
+
+[Drivers_Dir_x86]
+nvvhci.sys,nvvhci32.sys
+
+[Drivers_Dir_x64]
+nvvhci.sys,nvvhci64.sys
+
+[NVVHCI_Device]
+CopyFiles=Drivers_Dir_x86
+
+[NVVHCI_Device.NTamd64]
+CopyFiles=Drivers_Dir_x64
+
+[NVVHCI_Device.NT.HW]
+AddReg=NVVHCI_Device_AddReg
+
+[NVVHCI_Device.NTamd64.HW]
+AddReg=NVVHCI_Device_AddReg
+
+[NVVHCI_Device_AddReg]
+HKR,,DeviceCharacteristics,0x10001,0x0100
+
+[NVVHCI_Device.Services]
+AddService = nvvhci,%SPSVCINST_ASSOCSERVICE%, NVVHCI_Service_Inst
+
+[NVVHCI_Device.NTamd64.Services]
+AddService = nvvhci,%SPSVCINST_ASSOCSERVICE%, NVVHCI_Service_Inst
+
+[NVVHCI_Service_Inst]
+DisplayName    = %ServiceDesc%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\nvvhci.sys
+LoadOrderGroup = Extended Base
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+MfgName="NVIDIA"
+DiskId1 = "NVVHCI Driver Disk"
+DeviceDesc = "NVVHCI Enumerator"
+ServiceDesc = "NVVHCI Enumerator Service"
+

@@ -18,8 +18,9 @@
         NewLine,
         // \
         LineConcatenator,
-
         // ,
         ValueSeparator,
+        // "
+        ValueMarker,
     }
 }
