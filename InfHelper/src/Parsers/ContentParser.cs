@@ -241,7 +241,8 @@ namespace InfHelper.Parsers
                     SerializeCurrentTmpValueAsAnonymousKey();
                     break;
                 case TokenType.NewLine:
-                    SerializeCurrentTmpValueAsAnonymousKey();
+                    if (!string.IsNullOrEmpty(keyTmpValue))
+                        SerializeCurrentTmpValueAsAnonymousKey();
                     break;
                 case TokenType.EQ:
                     // multiple EQ tokens in formula
@@ -317,7 +318,7 @@ namespace InfHelper.Parsers
 
         protected void KeyParsingComplete()
         {
-            if (currentKey != null)
+            if (currentKey != null && currentKey.KeyValues.Any())
             {
                 currentCategory.Keys.Add(currentKey);
                 currentKey = null;
@@ -349,6 +350,11 @@ namespace InfHelper.Parsers
         protected void SerializeCurrentTmpValueAsAnonymousKey()
         {
             //TODO Implement this
+            var keyValue = new KeyValue
+            {
+                Value = keyTmpValue
+            };
+            currentKey.KeyValues.Add(keyValue);
             keyTmpValue = null;
         }
 
@@ -376,6 +382,5 @@ namespace InfHelper.Parsers
             parser.ValidTokenFound -= ValidTokenFoundDuringCommentParsing;
             parser.ValidTokenFound -= ValidTokenFoundDuringPureValueParsing;
         }
-
     }
 }

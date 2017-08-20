@@ -192,6 +192,25 @@ namespace InfHelperTests.Parsers
             var categories = new List<Category>();
             parser.CategoryDiscovered += (sender, category) => categories.Add(category);
             parser.Parse(content);
+
+            //Check categories names
+            Assert.AreEqual(categories[0].Name,"Version");
+            Assert.AreEqual(categories[1].Name, "DestinationDirs");
+            Assert.AreEqual(categories[2].Name, "Manufacturer");
+            Assert.AreEqual(categories[3].Name, "Standard");
+            Assert.AreEqual(categories[4].Name, "Standard.NTAMD64");
+            Assert.AreEqual(categories[5].Name, "Razer.NTx86");
+            Assert.AreEqual(categories[6].Name, "Razer.NTAMD64");
+            Assert.AreEqual(categories[7].Name, "Razer.NTAMD64.HW");
+            Assert.AreEqual(categories[8].Name, "Razer.NTAMD64.Services");
+            Assert.AreEqual(categories[9].Name, "SourceDisksNames");
+            Assert.AreEqual(categories[10].Name, "SourceDisksFiles");
+            Assert.AreEqual(categories[11].Name, "Razer.NTAMD64.CoInstallers");
+            Assert.AreEqual(categories[12].Name, "Razer_CoInstaller_AddReg");
+            Assert.AreEqual(categories[13].Name, "Razer_CoInstaller_CopyFiles");
+            Assert.AreEqual(categories[14].Name, "Razer_Installer_CopyFiles");
+            Assert.AreEqual(categories[15].Name, "Razer_Installer_CopyFilesWOW64");
+            Assert.AreEqual(categories[16].Name, "Strings");
         }
     }
 }
