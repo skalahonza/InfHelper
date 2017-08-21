@@ -133,13 +133,13 @@ namespace InfHelper.Parsers
             {
                 new LetterToken(),
                 new ValueMarkerToken(),
-                new WhiteSpaceToken()
+                new WhiteSpaceToken(),
+                new ValueSeparatorToken()
             };
 
             parser.IgnoredTokens = new HashSet<IToken>()
             {
                 new LineConcatenatorToken(),
-                new ValueSeparatorToken()
             };
         }
 
@@ -149,6 +149,7 @@ namespace InfHelper.Parsers
             switch (token.Type)
             {
                 case TokenType.Letter:
+                case TokenType.ValueSeparator:
                 case TokenType.WhiteSpace:
                     keyTmpValue += token.Symbol;
                     break;

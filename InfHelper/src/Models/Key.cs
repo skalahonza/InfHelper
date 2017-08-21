@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace InfHelper.Models
 {
@@ -13,5 +14,7 @@ namespace InfHelper.Models
         /// Values spearated by comma, can be inside quotes e.g. "value"
         /// </summary>
         public List<KeyValue> KeyValues { get; set; } = new List<KeyValue>();
+
+        public string PureTextValue => string.Join(", ", KeyValues.Select(x => x.Value));
     }
 }
