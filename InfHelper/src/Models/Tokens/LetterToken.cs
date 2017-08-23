@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace InfHelper.Models.Tokens
 {
-    public class LetterTokenBase : TokenBase
+    public class LetterToken : TokenBase
     {
         public override char[] Symbols
         {
@@ -25,7 +25,7 @@ namespace InfHelper.Models.Tokens
 
         public override bool IsToken(char c)
         {
-            return (!char.IsControl(c) && !char.IsWhiteSpace(c));
+            return !char.IsControl(c) && !char.IsWhiteSpace(c);
         }
     }
 }

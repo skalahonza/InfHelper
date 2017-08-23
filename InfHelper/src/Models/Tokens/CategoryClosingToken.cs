@@ -2,7 +2,7 @@ using System.Linq;
 
 namespace InfHelper.Models.Tokens
 {
-    public class CategoryClosingTokenBase : TokenBase
+    public class CategoryClosingToken : TokenBase
     {
         public override char[] Symbols { get; } = { ']' };
         

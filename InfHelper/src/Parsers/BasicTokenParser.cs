@@ -47,16 +47,16 @@ namespace InfHelper.Parsers
 
         public static ISet<TokenBase> AllAvailableTokens => new HashSet<TokenBase>
         {
-            new CategoryClosingTokenBase(),
-            new CategoryOpeningTokenBase(),
-            new EqualityTokenBase(),
-            new InlineCommentTokenBase(),
-            new NewLineTokenBase(),
-            new WhiteSpaceTokenBase(),
-            new LineConcatenatorTokenBase(),
-            new LetterTokenBase(),
-            new ValueSeparatorTokenBase(),
-            new ValueMarkerTokenBase()
+            new CategoryClosingToken(),
+            new CategoryOpeningToken(),
+            new EqualityToken(),
+            new InlineCommentToken(),
+            new NewLineToken(),
+            new WhiteSpaceToken(),
+            new LineConcatenatorToken(),
+            new LetterToken(),
+            new ValueSeparatorToken(),
+            new ValueMarkerToken()
         };
 
         public virtual void ParseFormula(string formula)

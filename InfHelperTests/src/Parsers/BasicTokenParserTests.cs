@@ -14,9 +14,9 @@ namespace InfHelperTests.Parsers
             string formula = "[TEST]";
             var parser = new BasicTokenParser(new HashSet<TokenBase>
             {
-                new CategoryOpeningTokenBase(),
-                new LetterTokenBase(),
-                new CategoryClosingTokenBase(),
+                new CategoryOpeningToken(),
+                new LetterToken(),
+                new CategoryClosingToken(),
             }, new HashSet<TokenBase>());
             string result = "";
             parser.ValidTokenFound += (sender, token) => result += token.Symbol;
@@ -32,13 +32,13 @@ namespace InfHelperTests.Parsers
             string formula = "  \n   " + expression + "   \n   ";
             var parser = new BasicTokenParser(new HashSet<TokenBase>
             {
-                new CategoryOpeningTokenBase(),
-                new LetterTokenBase(),
-                new CategoryClosingTokenBase(),
+                new CategoryOpeningToken(),
+                new LetterToken(),
+                new CategoryClosingToken(),
             }, new HashSet<TokenBase>
             {
-                new WhiteSpaceTokenBase(),
-                new NewLineTokenBase()
+                new WhiteSpaceToken(),
+                new NewLineToken()
             });
 
             string result = "";
@@ -54,13 +54,13 @@ namespace InfHelperTests.Parsers
             string formula = "[TE;ST] \\";
             var parser = new BasicTokenParser(new HashSet<TokenBase>
             {
-                new CategoryOpeningTokenBase(),
-                new LetterTokenBase(),
-                new CategoryClosingTokenBase(),
+                new CategoryOpeningToken(),
+                new LetterToken(),
+                new CategoryClosingToken(),
             }, new HashSet<TokenBase>
             {
-                new WhiteSpaceTokenBase(),
-                new NewLineTokenBase()
+                new WhiteSpaceToken(),
+                new NewLineToken()
             });
 
             string result = "";
@@ -81,13 +81,13 @@ namespace InfHelperTests.Parsers
             string formula = "Test = test\\\ntest";
             var parser = new BasicTokenParser(new HashSet<TokenBase>
             {
-                new LetterTokenBase(),
-                new EqualityTokenBase(),
-                new LineConcatenatorTokenBase()
+                new LetterToken(),
+                new EqualityToken(),
+                new LineConcatenatorToken()
             }, new HashSet<TokenBase>
             {
-                new WhiteSpaceTokenBase(),
-                new NewLineTokenBase()
+                new WhiteSpaceToken(),
+                new NewLineToken()
             });
 
             var tokens = new List<TokenType>();
@@ -103,11 +103,11 @@ namespace InfHelperTests.Parsers
             string formula = "Test = test\\\ntest";
             var parser = new BasicTokenParser(new HashSet<TokenBase>
             {
-                new LetterTokenBase(),
-                new EqualityTokenBase(),
+                new LetterToken(),
+                new EqualityToken(),
             }, new HashSet<TokenBase>
             {
-                new WhiteSpaceTokenBase(),
+                new WhiteSpaceToken(),
             });
 
             string id = "";
@@ -124,9 +124,9 @@ namespace InfHelperTests.Parsers
                         parser.ValidTokenFound -= keyParsing;
                         parser.AllowedTokens = new HashSet<TokenBase>()
                         {
-                            new LetterTokenBase(),
-                            new NewLineTokenBase(),
-                            new LineConcatenatorTokenBase(),
+                            new LetterToken(),
+                            new NewLineToken(),
+                            new LineConcatenatorToken(),
                         };
                         parser.ValidTokenFound += valueParsing;
                         break;
@@ -141,7 +141,7 @@ namespace InfHelperTests.Parsers
                         key += token.Symbol;
                         break;
                     case TokenType.LineConcatenator:
-                        parser.IgnoredTokens.Add(new NewLineTokenBase());                  
+                        parser.IgnoredTokens.Add(new NewLineToken());                  
                         break;
                 }
             }

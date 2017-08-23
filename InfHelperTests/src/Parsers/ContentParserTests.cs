@@ -188,14 +188,19 @@ namespace InfHelperTests.Parsers
         [TestMethod]
         public void RealLifeFileTest()
         {
+            var sw = new Stopwatch();
             var files = Directory.GetFiles(testFolder);
             var parser = new ContentParser();
             foreach (var file in files)
             {
+                sw.Reset();                
                 Trace.WriteLine("Loading file content: " + file);
                 var content = File.ReadAllText(file);
                 Trace.WriteLine("Parsing file: " + file);
+                sw.Start();
                 parser.Parse(content);
+                sw.Stop();
+                Trace.WriteLine($"Completed. Elapsed time: {sw.Elapsed}");
             }
         }
         [TestMethod]

@@ -53,14 +53,14 @@ namespace InfHelper.Parsers
 
             parser.AllowedTokens = new HashSet<TokenBase>
             {
-                new InlineCommentTokenBase(),
-                new CategoryOpeningTokenBase(),
+                new InlineCommentToken(),
+                new CategoryOpeningToken(),
             };
 
             parser.IgnoredTokens = new HashSet<TokenBase>
             {
-                new WhiteSpaceTokenBase(),
-                new NewLineTokenBase()
+                new WhiteSpaceToken(),
+                new NewLineToken()
             };
         }
 
@@ -76,8 +76,8 @@ namespace InfHelper.Parsers
             parser.IgnoredTokens?.Clear();
             parser.AllowedTokens = new HashSet<TokenBase>
             {
-                new CategoryClosingTokenBase(),
-                new LetterTokenBase()
+                new CategoryClosingToken(),
+                new LetterToken()
             };
         }
 
@@ -93,19 +93,19 @@ namespace InfHelper.Parsers
 
             parser.AllowedTokens = new HashSet<TokenBase>
             {
-                new InlineCommentTokenBase(),
-                new LetterTokenBase(),
-                new EqualityTokenBase(),
-                new WhiteSpaceTokenBase(),
-                new CategoryOpeningTokenBase(),
-                new NewLineTokenBase(),
-                new ValueSeparatorTokenBase(),
-                new ValueMarkerTokenBase(),
+                new InlineCommentToken(),
+                new LetterToken(),
+                new EqualityToken(),
+                new WhiteSpaceToken(),
+                new CategoryOpeningToken(),
+                new NewLineToken(),
+                new ValueSeparatorToken(),
+                new ValueMarkerToken(),
             };
 
             parser.IgnoredTokens = new HashSet<TokenBase>
             {
-                new LineConcatenatorTokenBase(),
+                new LineConcatenatorToken(),
             };
         }
 
@@ -120,18 +120,18 @@ namespace InfHelper.Parsers
 
             parser.AllowedTokens = new HashSet<TokenBase>
             {
-                new ValueSeparatorTokenBase(),
-                new LetterTokenBase(),
-                new NewLineTokenBase(),
-                new WhiteSpaceTokenBase(),
-                new ValueMarkerTokenBase()
+                new ValueSeparatorToken(),
+                new LetterToken(),
+                new NewLineToken(),
+                new WhiteSpaceToken(),
+                new ValueMarkerToken()
             };
 
             parser.IgnoredTokens = new HashSet<TokenBase>()
             {
-                new LineConcatenatorTokenBase(),
-                new InlineCommentTokenBase(),
-                new EqualityTokenBase()
+                new LineConcatenatorToken(),
+                new InlineCommentToken(),
+                new EqualityToken()
             };
         }
 
@@ -143,17 +143,17 @@ namespace InfHelper.Parsers
 
             parser.AllowedTokens = new HashSet<TokenBase>
             {
-                new LetterTokenBase(),
-                new ValueMarkerTokenBase(),
-                new WhiteSpaceTokenBase(),
-                new ValueSeparatorTokenBase()
+                new LetterToken(),
+                new ValueMarkerToken(),
+                new WhiteSpaceToken(),
+                new ValueSeparatorToken()
             };
 
             parser.IgnoredTokens = new HashSet<TokenBase>()
             {
-                new LineConcatenatorTokenBase(),
-                new InlineCommentTokenBase(),
-                new EqualityTokenBase()
+                new LineConcatenatorToken(),
+                new InlineCommentToken(),
+                new EqualityToken()
             };
         }
 
@@ -169,20 +169,20 @@ namespace InfHelper.Parsers
 
             parser.AllowedTokens = new HashSet<TokenBase>
             {
-                new NewLineTokenBase(),
+                new NewLineToken(),
             };
 
             parser.IgnoredTokens = new HashSet<TokenBase>()
             {
-                new LetterTokenBase(),
-                new WhiteSpaceTokenBase(),
-                new ValueMarkerTokenBase(),
-                new ValueSeparatorTokenBase(),
-                new LineConcatenatorTokenBase(),
-                new EqualityTokenBase(),
-                new InlineCommentTokenBase(),
-                new CategoryOpeningTokenBase(),
-                new CategoryClosingTokenBase(),
+                new LetterToken(),
+                new WhiteSpaceToken(),
+                new ValueMarkerToken(),
+                new ValueSeparatorToken(),
+                new LineConcatenatorToken(),
+                new EqualityToken(),
+                new InlineCommentToken(),
+                new CategoryOpeningToken(),
+                new CategoryClosingToken(),
             };
         }
 
