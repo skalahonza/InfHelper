@@ -12,12 +12,12 @@ namespace InfHelperTests.Parsers
         public void TokenOrderTest()
         {
             string formula = "[TEST]";
-            var parser = new BasicTokenParser(new HashSet<IToken>
+            var parser = new BasicTokenParser(new HashSet<TokenBase>
             {
-                new CategoryOpeningToken(),
-                new LetterToken(),
-                new CategoryClosingToken(),
-            }, new HashSet<IToken>());
+                new CategoryOpeningTokenBase(),
+                new LetterTokenBase(),
+                new CategoryClosingTokenBase(),
+            }, new HashSet<TokenBase>());
             string result = "";
             parser.ValidTokenFound += (sender, token) => result += token.Symbol;
             parser.ParseFormula(formula);
@@ -30,15 +30,15 @@ namespace InfHelperTests.Parsers
         {
             string expression = "[TEST]";
             string formula = "  \n   " + expression + "   \n   ";
-            var parser = new BasicTokenParser(new HashSet<IToken>
+            var parser = new BasicTokenParser(new HashSet<TokenBase>
             {
-                new CategoryOpeningToken(),
-                new LetterToken(),
-                new CategoryClosingToken(),
-            }, new HashSet<IToken>
+                new CategoryOpeningTokenBase(),
+                new LetterTokenBase(),
+                new CategoryClosingTokenBase(),
+            }, new HashSet<TokenBase>
             {
-                new WhiteSpaceToken(),
-                new NewLineToken()
+                new WhiteSpaceTokenBase(),
+                new NewLineTokenBase()
             });
 
             string result = "";
@@ -52,15 +52,15 @@ namespace InfHelperTests.Parsers
         public void AllowedTokensTest()
         {
             string formula = "[TE;ST] \\";
-            var parser = new BasicTokenParser(new HashSet<IToken>
+            var parser = new BasicTokenParser(new HashSet<TokenBase>
             {
-                new CategoryOpeningToken(),
-                new LetterToken(),
-                new CategoryClosingToken(),
-            }, new HashSet<IToken>
+                new CategoryOpeningTokenBase(),
+                new LetterTokenBase(),
+                new CategoryClosingTokenBase(),
+            }, new HashSet<TokenBase>
             {
-                new WhiteSpaceToken(),
-                new NewLineToken()
+                new WhiteSpaceTokenBase(),
+                new NewLineTokenBase()
             });
 
             string result = "";
@@ -79,15 +79,15 @@ namespace InfHelperTests.Parsers
         public void TokensWithSameSymbol()
         {
             string formula = "Test = test\\\ntest";
-            var parser = new BasicTokenParser(new HashSet<IToken>
+            var parser = new BasicTokenParser(new HashSet<TokenBase>
             {
-                new LetterToken(),
-                new EqualityToken(),
-                new LineConcatenatorToken()
-            }, new HashSet<IToken>
+                new LetterTokenBase(),
+                new EqualityTokenBase(),
+                new LineConcatenatorTokenBase()
+            }, new HashSet<TokenBase>
             {
-                new WhiteSpaceToken(),
-                new NewLineToken()
+                new WhiteSpaceTokenBase(),
+                new NewLineTokenBase()
             });
 
             var tokens = new List<TokenType>();
@@ -101,19 +101,19 @@ namespace InfHelperTests.Parsers
         public void TestOfAdaptability()
         {
             string formula = "Test = test\\\ntest";
-            var parser = new BasicTokenParser(new HashSet<IToken>
+            var parser = new BasicTokenParser(new HashSet<TokenBase>
             {
-                new LetterToken(),
-                new EqualityToken(),
-            }, new HashSet<IToken>
+                new LetterTokenBase(),
+                new EqualityTokenBase(),
+            }, new HashSet<TokenBase>
             {
-                new WhiteSpaceToken(),
+                new WhiteSpaceTokenBase(),
             });
 
             string id = "";
             string key = "";
 
-            void keyParsing(object sender, IToken token)
+            void keyParsing(object sender, TokenBase token)
             {
                 switch (token.Type)
                 {
@@ -122,18 +122,18 @@ namespace InfHelperTests.Parsers
                         break;
                     case TokenType.EQ:
                         parser.ValidTokenFound -= keyParsing;
-                        parser.AllowedTokens = new HashSet<IToken>()
+                        parser.AllowedTokens = new HashSet<TokenBase>()
                         {
-                            new LetterToken(),
-                            new NewLineToken(),
-                            new LineConcatenatorToken(),
+                            new LetterTokenBase(),
+                            new NewLineTokenBase(),
+                            new LineConcatenatorTokenBase(),
                         };
                         parser.ValidTokenFound += valueParsing;
                         break;
                 }
             }
 
-            void valueParsing(object sender, IToken token)
+            void valueParsing(object sender, TokenBase token)
             {
                 switch (token.Type)
                 {
@@ -141,7 +141,7 @@ namespace InfHelperTests.Parsers
                         key += token.Symbol;
                         break;
                     case TokenType.LineConcatenator:
-                        parser.IgnoredTokens.Add(new NewLineToken());                  
+                        parser.IgnoredTokens.Add(new NewLineTokenBase());                  
                         break;
                 }
             }

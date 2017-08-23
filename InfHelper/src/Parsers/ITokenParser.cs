@@ -6,11 +6,11 @@ namespace InfHelper.Parsers
 {
     public interface ITokenParser
     {
-        ISet<IToken> AllowedTokens { get; set; }
-        ISet<IToken> AllTokens { get;}
-        ISet<IToken> IgnoredTokens { get; set; }
-        event EventHandler<IToken> InvalidTokenFound;
-        event EventHandler<IToken> ValidTokenFound;
+        ISet<TokenBase> AllowedTokens { get; set; }
+        ISet<TokenBase> AllTokens { get;}
+        ISet<TokenBase> IgnoredTokens { get; set; }
+        event EventHandler<TokenBase> InvalidTokenFound;
+        event EventHandler<TokenBase> ValidTokenFound;
 
         void ParseFormula(string formula);
     }
