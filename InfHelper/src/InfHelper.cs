@@ -1,4 +1,5 @@
-﻿using InfHelper.Models;
+﻿using System.IO;
+using InfHelper.Models;
 using InfHelper.Parsers;
 
 namespace InfHelper
@@ -12,6 +13,12 @@ namespace InfHelper
             parser.CategoryDiscovered += (sender, category) => infData.Categories.Add(category);
             parser.Parse(data);
             return infData;
+        }
+
+        public InfData ParseFile(string path)
+        {
+            var content = File.ReadAllText(path);
+            return Parse(content);
         }
     }
 }

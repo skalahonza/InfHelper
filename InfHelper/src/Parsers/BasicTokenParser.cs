@@ -15,7 +15,7 @@ namespace InfHelper.Parsers
             get => allTokens;
             private set
             {
-                //Sort by priority - soe tokens share symbyols e.g. line concatenator and letter
+                //Sort by priority - some tokens share symbols e.g. line concentrator and letter
                 allTokens = new HashSet<TokenBase>(value.OrderByDescending(x => (int)x.Type));
             }
         }
@@ -59,7 +59,7 @@ namespace InfHelper.Parsers
             new ValueMarkerToken()
         };
 
-        public virtual void ParseFormula(string formula)
+        public virtual void Parse(string formula)
         {
             int row = 0, col = 0;
             string line = "";

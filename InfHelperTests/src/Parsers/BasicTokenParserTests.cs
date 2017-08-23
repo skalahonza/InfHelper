@@ -20,7 +20,7 @@ namespace InfHelperTests.Parsers
             }, new HashSet<TokenBase>());
             string result = "";
             parser.ValidTokenFound += (sender, token) => result += token.Symbol;
-            parser.ParseFormula(formula);
+            parser.Parse(formula);
 
             Assert.AreEqual(formula, result);
         }
@@ -43,7 +43,7 @@ namespace InfHelperTests.Parsers
 
             string result = "";
             parser.ValidTokenFound += (sender, token) => result += token.Symbol;
-            parser.ParseFormula(formula);
+            parser.Parse(formula);
 
             Assert.AreEqual(expression, result);
         }
@@ -70,7 +70,7 @@ namespace InfHelperTests.Parsers
             {
                 invalids += token.Symbol;
             };
-            parser.ParseFormula(formula);
+            parser.Parse(formula);
 
             Assert.IsTrue(invalids.Contains(";") && invalids.Contains("\\"));
         }
@@ -92,7 +92,7 @@ namespace InfHelperTests.Parsers
 
             var tokens = new List<TokenType>();
             parser.ValidTokenFound += (sender, token) => tokens.Add(token.Type);
-            parser.ParseFormula(formula);
+            parser.Parse(formula);
 
             Assert.IsTrue(tokens.Contains(TokenType.EQ) && tokens.Contains(TokenType.Letter) && tokens.Contains(TokenType.LineConcatenator));
         }
@@ -147,7 +147,7 @@ namespace InfHelperTests.Parsers
             }
 
             parser.ValidTokenFound += keyParsing;
-            parser.ParseFormula(formula);
+            parser.Parse(formula);
 
             Assert.AreEqual(id,"Test");
             Assert.AreEqual(key,"testtest");

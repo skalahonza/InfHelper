@@ -12,6 +12,6 @@ namespace InfHelper.Parsers
         event EventHandler<TokenBase> InvalidTokenFound;
         event EventHandler<TokenBase> ValidTokenFound;
 
-        void ParseFormula(string formula);
+        void Parse(string formula);
     }
 }

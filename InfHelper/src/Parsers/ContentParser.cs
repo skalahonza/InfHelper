@@ -31,7 +31,7 @@ namespace InfHelper.Parsers
         public void Parse(string content)
         {
             InitMainParsing();
-            parser.ParseFormula(content);
+            parser.Parse(content);
             ValueParsingComplete();
             KeyParsingComplete();
             CategoryParsingComplete();
@@ -43,7 +43,7 @@ namespace InfHelper.Parsers
         public event EventHandler<Category> CategoryDiscovered;
 
         /// <summary>
-        /// Inits main parsing state. Skips inlines comments, white spaces and new lines and init new cateory parsing when category opening tokenBase found.
+        /// Inits main parsing state. Skips inlines comments, white spaces and new lines and init new category parsing when category opening tokenBase found.
         /// </summary>
         protected void InitMainParsing()
         {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,6 +25,23 @@ namespace InfHelperTests
             //anonymous key with multiple values
             var values = new HashSet<string>{"HKR", null, "CoInstallers32", "0x00010000", "RazerCoinstaller.dll,RazerCoinstaller"};
             Assert.IsTrue(data["Razer_CoInstaller_AddReg"].Keys.First().KeyValues.All(x => values.Contains(x.Value)));
+        }
+
+        [TestMethod()]
+        public void FileParserEndpointTest()
+        {
+            var sw = new Stopwatch();
+            var helper = new InfHelper.InfHelper();
+            var files = Directory.GetFiles(testFolder);
+            foreach (var file in files)
+            {
+                sw.Reset();
+                Trace.WriteLine("Parsing file: " + file);
+                sw.Start();
+                helper.ParseFile(file);
+                sw.Stop();
+                Trace.WriteLine($"Completed. Elapsed time: {sw.Elapsed}");
+            }            
         }
     }
 }
