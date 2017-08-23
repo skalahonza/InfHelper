@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using InfHelper.Models;
@@ -186,6 +187,19 @@ namespace InfHelperTests.Parsers
 
         [TestMethod]
         public void RealLifeFileTest()
+        {
+            var files = Directory.GetFiles(testFolder);
+            var parser = new ContentParser();
+            foreach (var file in files)
+            {
+                Trace.WriteLine("Loading file content: " + file);
+                var content = File.ReadAllText(file);
+                Trace.WriteLine("Parsing file: " + file);
+                parser.Parse(content);
+            }
+        }
+        [TestMethod]
+        public void RealLifeFileTestDeep()
         {
             var content = File.ReadAllText(Path.Combine(testFolder, "oem100.inf"));
             var parser = new ContentParser();

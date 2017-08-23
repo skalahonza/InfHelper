@@ -106,6 +106,7 @@ namespace InfHelper.Parsers
                 //token not recognized
                 if (!found)
                     throw new NoneTokenRecognizedException($"None token recognized in row:{row} col:{col}" + Environment.NewLine + "Examined symbol: " + c
+                        + "\nSymbol number: " + Convert.ToInt16(c)
                         + "\nExamined line: " + line);
             }
         }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace InfHelper.Models.Tokens
 {
@@ -10,7 +12,7 @@ namespace InfHelper.Models.Tokens
 
         public LetterToken()
         {
-            var symbols = new List<char> { '.', '_', '\\', '%', '&' ,':','(',')','$','{','}','-','/'};
+            var symbols = new HashSet<char> { '.', '_', '\\', '%', '&' ,':','(',')','$','{','}','-','/', '\'',';','*','+'};
 
             //add a-z
             for (char i = 'a'; i <= 'z'; i++)
@@ -24,6 +26,12 @@ namespace InfHelper.Models.Tokens
             for (char i = '0'; i <= '9'; i++)
                 symbols.Add(i);
 
+            for (int i = char.MinValue; i <= char.MaxValue; i++)
+            {
+                char c = Convert.ToChar(i);
+                if (!char.IsControl(c) && !char.IsWhiteSpace(c))
+                    symbols.Add(c);
+            }
             Symbols = symbols.ToArray();
         }
     }

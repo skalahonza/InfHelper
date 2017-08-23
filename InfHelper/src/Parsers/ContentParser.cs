@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using InfHelper.Exceptions;
 using InfHelper.Models;
 using InfHelper.Models.Tokens;
@@ -14,6 +15,7 @@ namespace InfHelper.Parsers
         private readonly ITokenParser parser;
         private string keyTmpValue;
         private Action previousParsing;
+        private string parsingType = "";
 
         public ContentParser() : this(new BasicTokenParser())
         {
@@ -45,6 +47,7 @@ namespace InfHelper.Parsers
         /// </summary>
         protected void InitMainParsing()
         {
+            parsingType = "main parsing";
             ClearAllMyCallbacks();
             parser.ValidTokenFound += ValidTokenFoundDuringMainParsing;
 
@@ -66,6 +69,7 @@ namespace InfHelper.Parsers
         /// </summary>
         protected void InitCategoryParsing()
         {
+            parsingType = "category parsing";
             currentCategory = new Category();
             ClearAllMyCallbacks();
             parser.ValidTokenFound += ValidTokenFoundDuringCategoryParsing;
@@ -82,6 +86,7 @@ namespace InfHelper.Parsers
         /// </summary>
         protected void InitKeyIdParsing()
         {
+            parsingType = "key id parsing";
             currentKey = new Key();
             ClearAllMyCallbacks();
             parser.ValidTokenFound += ValidTokenFoundDuringKeyIdParsing;
@@ -98,7 +103,10 @@ namespace InfHelper.Parsers
                 new ValueMarkerToken(),
             };
 
-            parser.IgnoredTokens = new HashSet<IToken>();
+            parser.IgnoredTokens = new HashSet<IToken>
+            {
+                new LineConcatenatorToken(),
+            };
         }
 
         /// <summary>
@@ -106,6 +114,7 @@ namespace InfHelper.Parsers
         /// </summary>
         protected void InitKeyValueParsing()
         {
+            parsingType = "key value parsing";
             ClearAllMyCallbacks();
             parser.ValidTokenFound += ValidTokenFoundDuringKeyValueParsing;
 
@@ -121,11 +130,14 @@ namespace InfHelper.Parsers
             parser.IgnoredTokens = new HashSet<IToken>()
             {
                 new LineConcatenatorToken(),
+                new InlineCommentToken(),
+                new EqualityToken()
             };
         }
 
         protected void InitPureValueParsing()
         {
+            parsingType = "pure value parsing";
             ClearAllMyCallbacks();
             parser.ValidTokenFound += ValidTokenFoundDuringPureValueParsing;
 
@@ -140,6 +152,37 @@ namespace InfHelper.Parsers
             parser.IgnoredTokens = new HashSet<IToken>()
             {
                 new LineConcatenatorToken(),
+                new InlineCommentToken(),
+                new EqualityToken()
+            };
+        }
+
+        /// <summary>
+        /// Parse comments
+        /// </summary>
+        protected void InitCommentParsing(Action previous)
+        {
+            parsingType = "comment parsing";
+            previousParsing = previous;
+            ClearAllMyCallbacks();
+            parser.ValidTokenFound += ValidTokenFoundDuringCommentParsing;
+
+            parser.AllowedTokens = new HashSet<IToken>
+            {
+                new NewLineToken(),
+            };
+
+            parser.IgnoredTokens = new HashSet<IToken>()
+            {
+                new LetterToken(),
+                new WhiteSpaceToken(),
+                new ValueMarkerToken(),
+                new ValueSeparatorToken(),
+                new LineConcatenatorToken(),
+                new EqualityToken(),
+                new InlineCommentToken(),
+                new CategoryOpeningToken(),
+                new CategoryClosingToken(),
             };
         }
 
@@ -160,27 +203,6 @@ namespace InfHelper.Parsers
                 default:
                     throw new InvalidTokenException("Invalid token found during comment parsing: " + token.Symbol);
             }
-        }
-
-        /// <summary>
-        /// Parse comments
-        /// </summary>
-        protected void InitCommentParsing(Action previous)
-        {
-            previousParsing = previous;
-            ClearAllMyCallbacks();
-            parser.ValidTokenFound += ValidTokenFoundDuringCommentParsing;
-
-            parser.AllowedTokens = new HashSet<IToken>
-            {
-                new NewLineToken(),
-            };
-
-            parser.IgnoredTokens = new HashSet<IToken>()
-            {
-                new LetterToken(),
-                new WhiteSpaceToken(),
-            };
         }
 
         //Parsing inline comment
@@ -270,14 +292,7 @@ namespace InfHelper.Parsers
                     InitCategoryParsing();
                     break;
                 case TokenType.InlineComment:
-                    if (currentKey != null && currentKey.KeyValues.Any())
-                    {
-                        throw new InvalidTokenException("Inline comment detected, but key value expected.");
-                    }
-                    else
-                    {
-                        InitCommentParsing(InitKeyIdParsing);
-                    }
+                    InitCommentParsing(InitKeyIdParsing);
                     break;
                 default:
                     throw new InvalidTokenException("Invalid token found during parsing of the file: " + token.Symbol);
@@ -314,7 +329,13 @@ namespace InfHelper.Parsers
 
         protected void InvalidTokenFound(object sender, IToken token)
         {
-            throw new InvalidTokenException("Invalid token found during parsing of the formula: " + token.Symbol);
+            var builder = new StringBuilder();
+            builder.AppendLine($"Invalid token found during {parsingType} parsing: ");
+            builder.AppendLine($"Symbol: {token.Symbol}");
+            builder.AppendLine($"Token type: {token.Type}");
+            builder.AppendLine($"Allowed tokens: {string.Join(", ", parser.AllowedTokens.Select(t => t.Type.ToString()))}");
+            builder.AppendLine($"Ignored tokens: {string.Join(", ", parser.IgnoredTokens.Select(t => t.Type.ToString()))}");
+            throw new InvalidTokenException(builder.ToString());
         }
 
         protected void KeyParsingComplete()

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using InfHelper = InfHelper.InfHelper;
 
 namespace InfHelperTests
 {
@@ -14,7 +13,7 @@ namespace InfHelperTests
         public void ParseTest()
         {
             var content = File.ReadAllText(Path.Combine(testFolder, "oem100.inf"));
-            var helper = new global::InfHelper.InfHelper();
+            var helper = new InfHelper.InfHelper();
             var data = helper.Parse(content);
 
             // random key and key value

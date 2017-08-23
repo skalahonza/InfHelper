@@ -2,8 +2,8 @@
 {
     public enum TokenType
     {
-        // ;
-        InlineComment,
+        // a-z A-Z
+        Letter,
         // =
         EQ,
         // [
@@ -11,9 +11,7 @@
         // ]
         CategoryClosing,
         // \r space etc
-        WhiteSpace,
-        // a-z A-Z
-        Letter,
+        WhiteSpace,        
         // \n
         NewLine,
         // \
@@ -22,5 +20,7 @@
         ValueSeparator,
         // "
         ValueMarker,
+        // ;
+        InlineComment,
     }
 }
