@@ -18,9 +18,9 @@ namespace InfHelperTests
             var data = helper.Parse(content);
 
             // random key and key value
-            Assert.AreEqual(data["Version"]["Signature"].PureTextValue, "$WINDOWS NT$");
+            Assert.AreEqual("\"$WINDOWS NT$\"", data["Version"]["Signature"].PrimitiveValue);
             // anonymous key
-            Assert.AreEqual(data["Razer_CoInstaller_CopyFiles"].Keys.First().PureTextValue, "RazerCoinstaller.dll");
+            Assert.AreEqual("RazerCoinstaller.dll", data["Razer_CoInstaller_CopyFiles"].Keys.First().PrimitiveValue);
 
             //anonymous key with multiple values
             var values = new HashSet<string>{"HKR", null, "CoInstallers32", "0x00010000", "RazerCoinstaller.dll,RazerCoinstaller"};
@@ -42,6 +42,18 @@ namespace InfHelperTests
                 sw.Stop();
                 Trace.WriteLine($"Completed. Elapsed time: {sw.Elapsed}");
             }            
+        }
+
+        [TestMethod()]
+        public void PureValueParsingTest()
+        {
+            string formula =
+                "[DestinationDirs]\r\nRazer_CoInstaller_CopyFiles = 11\r\nRazer_Installer_CopyFiles = 16422,\"Razer\\RzWizardPkg\"\r\nRazer_Installer_CopyFilesWOW64 = 16426,\"Razer\\RzWizardPkg\"";
+            var helper = new InfHelper.InfHelper();
+            var data = helper.Parse(formula);
+            Assert.AreEqual("11",data["DestinationDirs"]["Razer_CoInstaller_CopyFiles"].PrimitiveValue);
+            Assert.AreEqual("16422, \"Razer\\RzWizardPkg\"", data["DestinationDirs"]["Razer_Installer_CopyFiles"].PrimitiveValue);
+            Assert.AreEqual("16426, \"Razer\\RzWizardPkg\"", data["DestinationDirs"]["Razer_Installer_CopyFilesWOW64"].PrimitiveValue);
         }
     }
 }

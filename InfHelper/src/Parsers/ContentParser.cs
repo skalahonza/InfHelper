@@ -197,7 +197,7 @@ namespace InfHelper.Parsers
                     keyTmpValue += tokenBase.Symbol;
                     break;
                 case TokenType.ValueMarker:
-                    ValueParsingComplete();
+                    ValueParsingComplete(true);
                     InitKeyValueParsing();
                     break;
                 default:
@@ -347,14 +347,25 @@ namespace InfHelper.Parsers
             }
         }
 
-        protected void ValueParsingComplete()
+        protected void ValueParsingComplete(bool pure = false)
         {
             if (!string.IsNullOrEmpty(keyTmpValue))
             {
-                var keyValue = new KeyValue
+                KeyValue keyValue;
+                if (!pure)
                 {
-                    Value = keyTmpValue
-                };
+                    keyValue = new KeyValue
+                    {
+                        Value = keyTmpValue
+                    };
+                }
+                else
+                {
+                    keyValue = new PureValue
+                    {
+                        Value = keyTmpValue
+                    };
+                }
                 currentKey.KeyValues.Add(keyValue);
                 keyTmpValue = null;
             }
