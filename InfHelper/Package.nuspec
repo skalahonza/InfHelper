@@ -7,12 +7,12 @@
     <authors>Jan Skála</authors>
     <owners></owners>
     <description>
-      A long description of the package. This shows up in the right pane of the Add Package Dialog as well as in the Package Manager Console when listing packages using the Get-Package command.
+      This NuGet allows you to parse .inf files and browse them using object model wrappers (InfData). You can browse categories and ´their keys by handling them as collections or simply using [id] operators. The NuGet is not meant for installing, only for parsing and browsing the file. The feature for creating and INF file will be added in next versions.
     </description>
     <releaseNotes>
     </releaseNotes>
     <summary>
-      Library for working with .inf files.
+      Library for working with .inf files. Parsing, browsing, no installing of the drivers.
     </summary>
     <language>en-US</language>
     <projectUrl>https://nuget.org/packages/InfHelper</projectUrl>
