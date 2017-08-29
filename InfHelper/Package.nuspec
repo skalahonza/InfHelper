@@ -20,16 +20,14 @@
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
     <copyright>Copyright © Jan Skála 2017 - All Rights Reserved</copyright>
     <dependencies>
-        <group targetFramework="net40">
-          <dependency id="log4net" version="1.2.10" />
-        </group>
     </dependencies>
     <references></references>
     <tags>Inf parser utils helper</tags>
   </metadata>
   <files>
-    <file src="lib\" target="lib" />
+    <file src="bin\Debug\" target="lib" />
     <file src="tools\" target="tools" />
     <file src="content\" target="content" />
+    <file src="src\" target="src" />
   </files>
 </package>
