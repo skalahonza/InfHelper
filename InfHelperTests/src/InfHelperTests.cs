@@ -29,6 +29,23 @@ namespace InfHelperTests
         }
 
         [TestMethod()]
+        public void ParseCaseInsensitiveTest()
+        {
+            var content = File.ReadAllText(Path.Combine(testFolder, "oem100.inf"));
+            var helper = new InfUtil();
+            var data = helper.Parse(content);
+
+            // random key and key value
+            Assert.AreEqual("\"$WINDOWS NT$\"", data["vErSiOn"]["SIGnatURE"].PrimitiveValue);
+            // anonymous key
+            Assert.AreEqual("RazerCoinstaller.dll", data["RAzEr_CoInstaller_COpyFiles"].Keys.First().PrimitiveValue);
+
+            //anonymous key with multiple values
+            var values = new HashSet<string> { "HKR", null, "CoInstallers32", "0x00010000", "RazerCoinstaller.dll,RazerCoinstaller" };
+            Assert.IsTrue(data["Razer_CoInstaller_AddReg"].Keys.First().KeyValues.All(x => values.Contains(x.Value)));
+        }
+
+        [TestMethod()]
         public void FileParserEndpointTest()
         {
             var sw = new Stopwatch();

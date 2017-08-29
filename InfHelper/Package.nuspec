@@ -14,7 +14,7 @@
       Library for working with .inf files. Parsing, browsing, no installing of the drivers.
     </summary>
     <language>en-US</language>
-    <projectUrl>https://nuget.org/packages/InfHelper</projectUrl>
+    <projectUrl>https://github.com/skalahonza/InfHelper</projectUrl>
     <iconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>

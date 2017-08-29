@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using InfHelper.Exceptions;
 
@@ -16,7 +17,8 @@ namespace InfHelper.Models
         {
             get
             {
-                var results = Keys.Where(k => k.Id == id);
+                var results = Keys.Where(k => string.Compare(k.Id,id,StringComparison.OrdinalIgnoreCase) == 0);
+                
                 if (results.Count() > 1)
                 {
                     throw new MultipleKeysWithSameIdException();

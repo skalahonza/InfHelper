@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using InfHelper.Exceptions;
 
@@ -12,7 +13,7 @@ namespace InfHelper.Models
         {
             get
             {
-                var results = Categories.Where(k => k.Name == name);
+                var results = Categories.Where(k => string.Compare(k.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
                 if (results.Count() > 1)
                 {
                     throw new MultipleCategoriesWithSameNameException();
