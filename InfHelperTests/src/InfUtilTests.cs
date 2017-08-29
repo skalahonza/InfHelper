@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace InfHelperTests
 {
     [TestClass()]
-    public class InfHelperTests
+    public class InfUtilTests
     {
         private const string testFolder = "..\\..\\infs";
         [TestMethod()]

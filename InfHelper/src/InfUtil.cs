@@ -4,7 +4,7 @@ using InfHelper.Parsers;
 
 namespace InfHelper
 {
-    public class InfHelper
+    public class InfUtil
     {
         public InfData Parse(string data)
         {

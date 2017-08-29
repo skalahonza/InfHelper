@@ -56,7 +56,7 @@
     <Compile Include="src\Exceptions\MultipleCategoriesWithSameNameException.cs" />
     <Compile Include="src\Exceptions\MultipleKeysWithSameIdException.cs" />
     <Compile Include="src\Models\InfData.cs" />
-    <Compile Include="src\InfHelper.cs" />
+    <Compile Include="src\InfUtil.cs" />
     <Compile Include="src\Models\Key.cs" />
     <Compile Include="src\Models\KeyValue.cs" />
     <Compile Include="src\Models\Tokens\CategoryClosingToken.cs" />
