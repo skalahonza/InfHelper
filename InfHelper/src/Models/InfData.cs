@@ -51,5 +51,17 @@ namespace InfHelper.Models
                 }
             }
         }
+
+        public IEnumerable<Key> FindKeyById(string keyId)
+        {
+            foreach (var category in Categories)
+            {
+                foreach (var key in category.Keys)
+                {
+                    if (string.Compare(key.Id, keyId, StringComparison.OrdinalIgnoreCase) == 0)
+                        yield return key;
+                }
+            }
+        }
     }
 }

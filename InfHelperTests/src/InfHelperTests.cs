@@ -24,7 +24,7 @@ namespace InfHelperTests
             Assert.AreEqual("RazerCoinstaller.dll", data["Razer_CoInstaller_CopyFiles"].Keys.First().PrimitiveValue);
 
             //anonymous key with multiple values
-            var values = new HashSet<string>{"HKR", null, "CoInstallers32", "0x00010000", "RazerCoinstaller.dll,RazerCoinstaller"};
+            var values = new HashSet<string> { "HKR", null, "CoInstallers32", "0x00010000", "RazerCoinstaller.dll,RazerCoinstaller" };
             Assert.IsTrue(data["Razer_CoInstaller_AddReg"].Keys.First().KeyValues.All(x => values.Contains(x.Value)));
         }
 
@@ -59,7 +59,7 @@ namespace InfHelperTests
                 helper.ParseFile(file);
                 sw.Stop();
                 Trace.WriteLine($"Completed. Elapsed time: {sw.Elapsed}");
-            }            
+            }
         }
 
         [TestMethod()]
@@ -69,9 +69,19 @@ namespace InfHelperTests
                 "[DestinationDirs]\r\nRazer_CoInstaller_CopyFiles = 11\r\nRazer_Installer_CopyFiles = 16422,\"Razer\\RzWizardPkg\"\r\nRazer_Installer_CopyFilesWOW64 = 16426,\"Razer\\RzWizardPkg\"";
             var helper = new InfUtil();
             var data = helper.Parse(formula);
-            Assert.AreEqual("11",data["DestinationDirs"]["Razer_CoInstaller_CopyFiles"].PrimitiveValue);
+            Assert.AreEqual("11", data["DestinationDirs"]["Razer_CoInstaller_CopyFiles"].PrimitiveValue);
             Assert.AreEqual("16422, \"Razer\\RzWizardPkg\"", data["DestinationDirs"]["Razer_Installer_CopyFiles"].PrimitiveValue);
             Assert.AreEqual("16426, \"Razer\\RzWizardPkg\"", data["DestinationDirs"]["Razer_Installer_CopyFilesWOW64"].PrimitiveValue);
+        }
+
+        [TestMethod()]
+        public void SearchMethdTest()
+        {
+            string formula =
+                "[DestinationDirs]\r\nRazer_CoInstaller_CopyFiles = 11\r\nRazer_Installer_CopyFiles = 16422,\"Razer\\RzWizardPkg\"\r\nRazer_Installer_CopyFilesWOW64 = 16426,\"Razer\\RzWizardPkg\"";
+            var helper = new InfUtil();
+            var data = helper.Parse(formula);
+            Assert.AreEqual("11", data.FindKeyById("Razer_CoInstaller_CopyFiles").First().PrimitiveValue);
         }
     }
 }
