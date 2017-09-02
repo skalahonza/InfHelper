@@ -1,5 +1,6 @@
 # InfHelper
-Nuget package for C# that will help parsing inf files storing information about system drivers.
+* Nuget package for C# that will help parsing inf files storing information about system drivers.
+* This NuGet allows you to parse .inf files and browse them using object model wrappers (InfData). You can browse categories and ´their keys by handling them as collections or simply using [id] operators. The NuGet is not meant for installing, only for parsing and browsing the file. The feature for creating and INF file will be added in next versions.
 
 ## How to use
 ### Init parsing
