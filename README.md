@@ -10,10 +10,10 @@ var data = helper.ParseFile(path);
 ```
 ### Getting data
 ```cs
-/obtain category by id
+//obtain category by id
 var version = data["Version"];
 
-//extract key from the inf file
+//get keys from the category
 var providerKey = version["Provider"];
 var classGuidKey = version["ClassGuid"];
 
