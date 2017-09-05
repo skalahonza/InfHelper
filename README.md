@@ -34,3 +34,20 @@ if(value.IsDynamic){
 //you can also ignore all wrappers and just get the primitive value (string)
 var value = key.PrimitiveValue;
 ```
+
+### Custom driver info serialization
+```cs
+public class DriverInfo
+    {
+        [InfKeyValue("Version","Class")]
+        public string Class { get; set; }
+        [InfKeyValue("Version", "Provider")]
+        public string Provider { get; set; }
+    }
+
+    // ....
+
+    var helper = new InfUtil();
+    var serilized = helper.SerializeFileInto<DriverInfo>(Path.Combine(testFolder, 
+    "oem100.inf" out InfData data);
+```
