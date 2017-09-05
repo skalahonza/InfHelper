@@ -2,16 +2,16 @@
 
 namespace InfHelper.Models.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = true)]
-    public class InfKeyValue : Attribute
+    [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
+    public sealed class InfKeyValue : Attribute
     {
-        private readonly string categoryId;
-        private readonly string keyId;
+        public readonly string CategoryId;
+        public readonly string KeyId;
 
-        public InfKeyValue(string CategoryId, string KeyId)
+        public InfKeyValue(string categoryId, string keyId)
         {
-            categoryId = CategoryId;
-            keyId = KeyId;
+            CategoryId = categoryId;
+            KeyId = keyId;
         }
     }
 }

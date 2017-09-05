@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using InfHelper;
+using InfHelper.Models;
+using InfHelperTests.ModelsForTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace InfHelperTests
@@ -82,6 +84,16 @@ namespace InfHelperTests
             var helper = new InfUtil();
             var data = helper.Parse(formula);
             Assert.AreEqual("11", data.FindKeyById("Razer_CoInstaller_CopyFiles").First().PrimitiveValue);
+        }
+
+        [TestMethod()]
+        public void CustomSerializationTest()
+        {
+            var helper = new InfUtil();
+            InfData data;
+            var serilized = helper.SerializeFileInto<DriverInfo>(Path.Combine(testFolder, "oem100.inf"), out data);
+            Assert.AreEqual("HIDClass",serilized.Class);
+            Assert.AreEqual("%Razer%",serilized.Provider);
         }
     }
 }
