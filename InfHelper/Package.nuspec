@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>InfHelper</id>
-    <version>0.5.4</version>
+    <version>0.6.0</version>
     <title>InfHelper</title>
     <authors>Jan Skála</authors>
     <owners></owners>
@@ -13,6 +13,7 @@
       This is a beta version, some features were not yet implemented or tested.
       Added case insensitivity.
       Can search key id across all categories.
+      Can serialize driver information into custom model, using custom Attribute.
     </releaseNotes>
     <summary>
       Library for working with .inf files. Parsing, browsing, no installing of the drivers.

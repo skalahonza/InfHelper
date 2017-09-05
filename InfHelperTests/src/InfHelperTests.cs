@@ -93,6 +93,16 @@ namespace InfHelperTests
             var serilized = helper.SerializeFileInto<DriverInfo>(Path.Combine(testFolder, "oem100.inf"), out InfData data);
             Assert.AreEqual("HIDClass",serilized.Class);
             Assert.AreEqual("%Razer%",serilized.Provider);
+            Assert.AreEqual("\"Razer Installer\"", serilized.DiskId1);
+        }
+
+        [TestMethod()]
+        public void CustomSerializationDereferenceTest()
+        {
+            var helper = new InfUtil();
+            var serilized = helper.SerializeFileInto<DriverInfoDereferenced>(Path.Combine(testFolder, "oem100.inf"), out InfData data);
+            Assert.AreEqual("HIDClass", serilized.Class);
+            Assert.AreEqual("\"Razer Inc\"", serilized.Provider);
         }
     }
 }

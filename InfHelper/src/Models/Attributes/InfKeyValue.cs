@@ -7,11 +7,13 @@ namespace InfHelper.Models.Attributes
     {
         public readonly string CategoryId;
         public readonly string KeyId;
+        public readonly bool DeferenceDynamicValueKeys;
 
-        public InfKeyValue(string categoryId, string keyId)
+        public InfKeyValue(string categoryId, string keyId, bool deferenceDynamicValueKeys = false)
         {
             CategoryId = categoryId;
             KeyId = keyId;
+            DeferenceDynamicValueKeys = deferenceDynamicValueKeys;
         }
     }
 }
