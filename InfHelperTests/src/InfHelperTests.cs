@@ -90,8 +90,7 @@ namespace InfHelperTests
         public void CustomSerializationTest()
         {
             var helper = new InfUtil();
-            InfData data;
-            var serilized = helper.SerializeFileInto<DriverInfo>(Path.Combine(testFolder, "oem100.inf"), out data);
+            var serilized = helper.SerializeFileInto<DriverInfo>(Path.Combine(testFolder, "oem100.inf"), out InfData data);
             Assert.AreEqual("HIDClass",serilized.Class);
             Assert.AreEqual("%Razer%",serilized.Provider);
         }
