@@ -34,7 +34,7 @@ namespace InfHelper
             var infData = new InfData();
             var parser = new ContentParser();
 
-            var dict = new Dictionary<string, PropertyInfo>();
+            var dict = new Dictionary<Key, PropertyInfo>();
 
             parser.CategoryDiscovered += (sender, category) =>
             {
@@ -43,38 +43,96 @@ namespace InfHelper
                 {
                     if (Attribute.IsDefined(property, typeof(InfKeyValue)))
                     {
-                        var attribute = (InfKeyValue)Attribute.GetCustomAttribute(property, typeof(InfKeyValue));
-                        if (category.Name == attribute.CategoryId)
+                        var attribute = (InfKeyValue) Attribute.GetCustomAttribute(property, typeof(InfKeyValue));
+                        if (category.IsNamed(attribute.CategoryId))
                         {
                             var key = category[attribute.KeyId];
-                            property.SetValue(o, key.PrimitiveValue);
-
-                            //save dynamic values for further dereferencing
-                            if (attribute.DeferenceDynamicValueKeys && key.KeyValues.Count == 1 && key.KeyValues.First().IsDynamic)
+                            if (key != null)
                             {
-                                // save for later des.
-                                dict.Add(key.KeyValues.First().DynamicKeyId, property);
-                                dereference = true;
-                            }                            
+                                property.SetValue(o, key.PrimitiveValue);
+
+                                //save dynamic values for further dereferencing
+                                if (attribute.DeferenceDynamicValueKeys && key.KeyValues.Any() &&
+                                    key.KeyValues.Any(x => x.IsDynamic))
+                                {
+                                    // save for later des.
+                                    dict.Add(key, property);
+                                    dereference = true;
+                                }
+                            }
                         }
                     }
                 }
 
-                //des what left
-                if (dereference)
+                //TODO dereference keys
+                if (dereference && false)
                 {
-                    foreach (var categoryKey in category.Keys)
+                    foreach (var item in dict.ToList())
                     {
-                        if (dict.Keys.Any())
-                            if (categoryKey.Id != null && dict.ContainsKey(categoryKey.Id))
-                                dict[categoryKey.Id].SetValue(o, categoryKey.PrimitiveValue);
-                    }
+                        string value = GetPrimitiveValueForKey(category, item.Key);
+                        if (value != null)
+                        {
+                            item.Value.SetValue(o, value);
+                            dict.Remove(item.Key);
+                        }                        
+                    }                   
                 }
             };
             parser.Parse(data);
-
             outputData = infData;
+
+            //dereference keys - if some left after category dereferencing
+            if (dereference)
+            {
+                foreach (var item in dict)
+                {
+                    string value = GetPrimitiveValueForKey(infData, item.Key);
+                    if (value != null)
+                    {
+                        item.Value.SetValue(o, value);
+                    }                    
+                }
+            }
+
             return o;
+        }
+
+        private string GetPrimitiveValueForKey(Category data, Key key)
+        {
+            if (key.KeyValues.Any())
+            {
+                var first = key.KeyValues.First();
+                //dynamic
+                if (first.IsDynamic)
+                {
+                    var result =
+                        data.Keys
+                            .FirstOrDefault(x => x.KeyValues.All(v => !v.IsDynamic)) // that has not a dynamic value
+                            ?.KeyValues.First().Value; //return the first text value
+                    return result;
+                }
+                //static
+                return key.PrimitiveValue;
+            }
+            return "";
+        }
+
+        private string GetPrimitiveValueForKey(InfData data, Key key)
+        {
+            if (key.KeyValues.Any())
+            {
+                var first = key.KeyValues.First();
+                //dynamic
+                if (first.IsDynamic)
+                {
+                    return data.FindKeyById(first.DynamicKeyId) //find dynamic key
+                        .First(x => x.KeyValues.All(v => !v.IsDynamic)) // that has not a dynamic value
+                        .KeyValues.First().Value; //return the first text value
+                }
+                //static
+                return key.PrimitiveValue;
+            }
+            return "";
         }
 
         public T SerializeFileInto<T>(string path, out InfData outputData) where T : new()

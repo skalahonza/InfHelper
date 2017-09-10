@@ -12,7 +12,15 @@ namespace InfHelper.Models
         /// </summary>
         public string Name { get; set; }
         public List<Key> Keys { get; set; } = new List<Key>();
-
+        /// <summary>
+        /// Check if the Category is named like the given parameter - not case sensitive
+        /// </summary>
+        /// <param name="name">Compare to given name</param>
+        /// <returns></returns>
+        public bool IsNamed(string name)
+        {
+            return string.Compare(Name, name, StringComparison.OrdinalIgnoreCase) == 0;
+        }
         public Key this[string id]
         {
             get

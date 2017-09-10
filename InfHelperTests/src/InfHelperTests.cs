@@ -97,12 +97,32 @@ namespace InfHelperTests
         }
 
         [TestMethod()]
+        public void CustomSerializationTest2()
+        {
+            var helper = new InfUtil();
+            var serilized = helper.SerializeFileInto<DriverInfo>(Path.Combine(testFolder, "oem147.inf"), out InfData data);
+            Assert.AreEqual("net", serilized.Class);
+            Assert.AreEqual("%PROVIDER_NAME%", serilized.Provider);
+        }
+
+        [TestMethod()]
         public void CustomSerializationDereferenceTest()
         {
             var helper = new InfUtil();
             var serilized = helper.SerializeFileInto<DriverInfoDereferenced>(Path.Combine(testFolder, "oem100.inf"), out InfData data);
             Assert.AreEqual("HIDClass", serilized.Class);
-            Assert.AreEqual("\"Razer Inc\"", serilized.Provider);
+            Assert.AreEqual("Razer Inc", serilized.Provider);
+        }
+
+        [TestMethod()]
+        public void CustomSerializationHugeDereferenceTest()
+        {
+            var helper = new InfUtil();
+            foreach (var file in Directory.GetFiles(testFolder))
+            {
+                var serilized = helper.SerializeFileInto<DriverInfoDereferenced>(file, out InfData data);
+                Assert.IsNotNull(serilized.Provider);
+            }
         }
     }
 }
