@@ -28,7 +28,6 @@ namespace InfHelper
 
         public T SerializeInto<T>(string data, out InfData outputData) where T : new()
         {
-            bool dereference = false;
             var o = new T();
             var t = o.GetType();
             var infData = new InfData();
@@ -57,64 +56,34 @@ namespace InfHelper
                                 {
                                     // save for later des.
                                     dict.Add(key, property);
-                                    dereference = true;
                                 }
                             }
                         }
                     }
-                }
-
-                //TODO dereference keys
-                if (dereference && false)
-                {
-                    foreach (var item in dict.ToList())
-                    {
-                        string value = GetPrimitiveValueForKey(category, item.Key);
-                        if (value != null)
-                        {
-                            item.Value.SetValue(o, value);
-                            dict.Remove(item.Key);
-                        }                        
-                    }                   
                 }
             };
             parser.Parse(data);
             outputData = infData;
 
             //dereference keys - if some left after category dereferencing
-            if (dereference)
+            if (dict.Any())
             {
-                foreach (var item in dict)
-                {
-                    string value = GetPrimitiveValueForKey(infData, item.Key);
-                    if (value != null)
-                    {
-                        item.Value.SetValue(o, value);
-                    }                    
-                }
+                DerefereneDynamicKeys(o, infData, dict);
             }
 
             return o;
         }
 
-        private string GetPrimitiveValueForKey(Category data, Key key)
+        private void DerefereneDynamicKeys<T>(T o, InfData infData, Dictionary<Key, PropertyInfo> dict) where T : new()
         {
-            if (key.KeyValues.Any())
+            foreach (var item in dict)
             {
-                var first = key.KeyValues.First();
-                //dynamic
-                if (first.IsDynamic)
+                string value = GetPrimitiveValueForKey(infData, item.Key);
+                if (value != null)
                 {
-                    var result =
-                        data.Keys
-                            .FirstOrDefault(x => x.KeyValues.All(v => !v.IsDynamic)) // that has not a dynamic value
-                            ?.KeyValues.First().Value; //return the first text value
-                    return result;
+                    item.Value.SetValue(o, value);
                 }
-                //static
-                return key.PrimitiveValue;
             }
-            return "";
         }
 
         private string GetPrimitiveValueForKey(InfData data, Key key)
