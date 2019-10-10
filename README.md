@@ -2,8 +2,8 @@
 ![TFS Build: ](https://triads.visualstudio.com/_apis/public/build/definitions/cc9f9fd6-7e78-4a14-ad7c-a1824901880a/2/badge)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-* Nuget package for C# that will help parsing inf files storing information about system drivers.
-* This NuGet allows you to parse .inf files and browse them using object model wrappers (InfData). You can browse categories and ´their keys by handling them as collections or simply using [id] operators. The NuGet is not meant for installing, only for parsing and browsing the file. The feature for creating and INF file will be added in next versions.
+* Nuget package for C# that makes it easy to parse .inf files, to store and work with information about system drivers.
+* This NuGet Package allows you to parse .inf files and browse them using object model wrappers (using the InfData class). You can browse categories and their keys by handling them as collections or simply using [id] operators. Currently, this package does not support installing drivers from inf files, only parsing and browsing through the file.  The feature for creating an INF file will be added in later versions.
 
 ## How to use
 ### Init parsing
