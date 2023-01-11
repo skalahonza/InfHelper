@@ -64,6 +64,7 @@
     <Compile Include="src\Models\Tokens\CategoryOpeningToken.cs" />
     <Compile Include="src\Models\Tokens\EqualityToken.cs" />
     <Compile Include="src\Models\Tokens\InlineCommentToken.cs" />
+    <Compile Include="src\Models\Tokens\SpaceToken.cs" />
     <Compile Include="src\Models\Tokens\TokenBase.cs" />
     <Compile Include="src\Models\Tokens\LetterToken.cs" />
     <Compile Include="src\Models\Tokens\LineConcatenatorToken.cs" />
