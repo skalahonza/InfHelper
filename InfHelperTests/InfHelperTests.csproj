@@ -73,6 +73,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="infs\spaces.inf" />
     <Content Include="infs\oem100.inf" />
     <Content Include="infs\oem106.inf" />
     <Content Include="infs\oem11.inf" />
