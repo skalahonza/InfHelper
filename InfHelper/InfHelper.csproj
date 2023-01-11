@@ -1,119 +1,52 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0451BAEF-DF2E-4B98-8644-94EE9415E389}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>InfHelper</RootNamespace>
-    <AssemblyName>InfHelper</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net462</TargetFramework>
+    <AssemblyTitle>InfHelper</AssemblyTitle>
+    <Product>InfHelper</Product>
+    <Description>
+      This NuGet allows you to parse .inf files and browse them using object model wrappers (InfData). You can browse categories and ´their keys by handling them as collections or simply using [id] operators. The NuGet is not meant for installing, only for parsing and browsing the file. The feature for creating and INF file will be added in next versions.
+    </Description>
+    <Copyright>Copyright © Jan Skála 2017 - All Rights Reserved</Copyright>
+    <Version>0.6.6</Version>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <Authors>Jan Skála</Authors>
+    <PackageIconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</PackageIconUrl>
+    <PackageId>InfHelper</PackageId>
+    <PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/skalahonza/InfHelper</PackageProjectUrl>
+    <PackageReleaseNotes>
+      This is a beta version, some features were not yet implemented or tested.
+      Added case insensitivity.
+      Can search key id across all categories.
+      Can serialize driver information into custom model, using custom Attribute.
+      Can dereference simple dynamic value keys while serializing.
+    </PackageReleaseNotes>
+    <PackageTags>Inf parser utils helper</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>bin\Debug\</OutputPath>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <OutputPath>bin\Release\</OutputPath>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Exceptions\InvalidTokenException.cs" />
-    <Compile Include="src\Exceptions\NoneTokenRecognizedException.cs" />
-    <Compile Include="src\Models\Attributes\InfKeyValue.cs" />
-    <Compile Include="src\Models\Category.cs" />
-    <Compile Include="src\Exceptions\InfParserException.cs" />
-    <Compile Include="src\Exceptions\MultipleCategoriesWithSameNameException.cs" />
-    <Compile Include="src\Exceptions\MultipleKeysWithSameIdException.cs" />
-    <Compile Include="src\Models\InfData.cs" />
-    <Compile Include="src\InfUtil.cs" />
-    <Compile Include="src\Models\Key.cs" />
-    <Compile Include="src\Models\KeyValue.cs" />
-    <Compile Include="src\Models\Tokens\CategoryClosingToken.cs" />
-    <Compile Include="src\Models\Tokens\CategoryOpeningToken.cs" />
-    <Compile Include="src\Models\Tokens\EqualityToken.cs" />
-    <Compile Include="src\Models\Tokens\InlineCommentToken.cs" />
-    <Compile Include="src\Models\Tokens\SpaceToken.cs" />
-    <Compile Include="src\Models\Tokens\TokenBase.cs" />
-    <Compile Include="src\Models\Tokens\LetterToken.cs" />
-    <Compile Include="src\Models\Tokens\LineConcatenatorToken.cs" />
-    <Compile Include="src\Models\Tokens\NewLineToken.cs" />
-    <Compile Include="src\Models\Tokens\TokenType.cs" />
-    <Compile Include="src\Models\Tokens\ValueMarkerToken.cs" />
-    <Compile Include="src\Models\Tokens\ValueSeparatorToken.cs" />
-    <Compile Include="src\Models\Tokens\WhiteSpaceToken.cs" />
-    <Compile Include="src\Parsers\ContentParser.cs" />
-    <Compile Include="src\Parsers\ITokenParser.cs" />
-    <Compile Include="src\Parsers\BasicTokenParser.cs" />
+    <PackageReference Include="more.xunit.runner.visualstudio" Version="2.2.2">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="NuGetPackage.ps1" />
     <None Include="NuGetSetup.ps1" />
     <None Include="NuGet.exe" />
-    <None Include="NuGet.config" />
-    <None Include="Package.nuspec" />
-    <None Include="packages.config" />
     <None Include="tools\init.ps1" />
     <None Include="tools\install.ps1" />
     <None Include="tools\uninstall.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="content\" />
-    <Folder Include="lib\" />
+    <Compile Remove="src\InfUtility.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>-->
-  <!-- TODO uncomment if not working
-  <Target Name="AfterBuild">
-    <Delete Files=".\NuGet.log" />
-    <Exec WorkingDirectory="$(MSBuildProjectDirectory)" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " ContinueOnError="True" Command="PowerShell.exe -NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Unrestricted -Command &quot;&amp; {.\NuGetPackage.ps1} &quot;" IgnoreExitCode="true">
-      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
-    </Exec>
-    <Exec WorkingDirectory="$(MSBuildProjectDirectory)" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " ContinueOnError="True" Command="PowerShell.exe -NoProfile -NonInteractive -ExecutionPolicy Unrestricted -Command &quot;&amp; {.\NuGetPackage.ps1 -Publish} &quot;" IgnoreExitCode="true">
-      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
-    </Exec>
-    <Message Text=" " Importance="High" />
-    <Message Text="Build Exit Code: $(ExitCode)" Importance="High" />
-    <Error Text="Encountered error(s) when creating package.%0aCheck the NuGet.log file for details." Condition=" '$(ExitCode)' == '1' " File="NuGet.log" />
-    <Error Text="Created package but encountered error(s) when trying to publish it.%0aCheck the NuGet.log file for details." Condition=" '$(Configuration)|$(Platform)|$(ExitCode)' == 'Release|AnyCPU|2' " File="NuGet.log" />
-    <Message Text="SUCCESS: Created package." Condition=" '$(Configuration)|$(Platform)|$(ExitCode)' == 'Debug|AnyCPU|0' " Importance="High" />
-    <Message Text="SUCCESS: Published package." Condition=" '$(Configuration)|$(Platform)|$(ExitCode)' == 'Release|AnyCPU|0' " Importance="High" />
-  </Target>-->
 </Project>

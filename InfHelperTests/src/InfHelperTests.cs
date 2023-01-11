@@ -12,7 +12,7 @@ namespace InfHelperTests
     [TestClass()]
     public class InfHelperTests
     {
-        private const string testFolder = "..\\..\\infs";
+        private const string testFolder = "infs";
         [TestMethod()]
         public void ParseTest()
         {

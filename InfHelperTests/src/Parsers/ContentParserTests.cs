@@ -12,7 +12,7 @@ namespace InfHelperTests.Parsers
     [TestClass()]
     public class ContentParserTests
     {
-        private const string testFolder = "..\\..\\infs";
+        private const string testFolder = "infs";
 
         [TestMethod()]
         public void CategoryParsing()
