@@ -22,5 +22,8 @@
         ValueMarker,
         // ;
         InlineComment,
+        
+        // just space (not a tab or newline)
+        Space
     }
 }

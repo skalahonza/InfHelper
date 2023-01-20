@@ -12,7 +12,7 @@ namespace InfHelperTests
     [TestClass()]
     public class InfHelperTests
     {
-        private const string testFolder = "..\\..\\infs";
+        private const string testFolder = "infs";
         [TestMethod()]
         public void ParseTest()
         {
@@ -123,6 +123,16 @@ namespace InfHelperTests
                 var serilized = helper.SerializeFileInto<DriverInfoDereferenced>(file, out InfData data);
                 Assert.IsNotNull(serilized.Provider);
             }
+        }
+        
+        [TestMethod()]
+        public void CanParseSpacesInCategoryName()
+        {
+            var helper = new InfUtil();
+            var info = helper.ParseFile(Path.Combine(testFolder, "spaces.inf"));
+            
+            // info.Categories should contain [OEM URLS]
+            Assert.IsTrue(info.Categories.Count(x => x.Name == "OEM URLS") == 1);
         }
     }
 }

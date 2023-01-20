@@ -52,6 +52,7 @@ namespace InfHelper.Parsers
             new EqualityToken(),
             new InlineCommentToken(),
             new NewLineToken(),
+            new SpaceToken(),
             new WhiteSpaceToken(),
             new LineConcatenatorToken(),
             new LetterToken(),

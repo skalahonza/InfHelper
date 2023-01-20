@@ -76,6 +76,7 @@ namespace InfHelper.Parsers
             parser.IgnoredTokens?.Clear();
             parser.AllowedTokens = new HashSet<TokenBase>
             {
+                new SpaceToken(),
                 new CategoryClosingToken(),
                 new LetterToken()
             };
@@ -96,6 +97,7 @@ namespace InfHelper.Parsers
                 new InlineCommentToken(),
                 new LetterToken(),
                 new EqualityToken(),
+                new SpaceToken(),
                 new WhiteSpaceToken(),
                 new CategoryOpeningToken(),
                 new NewLineToken(),
@@ -123,6 +125,7 @@ namespace InfHelper.Parsers
                 new ValueSeparatorToken(),
                 new LetterToken(),
                 new NewLineToken(),
+                new SpaceToken(),
                 new WhiteSpaceToken(),
                 new ValueMarkerToken()
             };
@@ -145,6 +148,7 @@ namespace InfHelper.Parsers
             {
                 new LetterToken(),
                 new ValueMarkerToken(),
+                new SpaceToken(),
                 new WhiteSpaceToken(),
                 new ValueSeparatorToken()
             };
@@ -175,6 +179,7 @@ namespace InfHelper.Parsers
             parser.IgnoredTokens = new HashSet<TokenBase>()
             {
                 new LetterToken(),
+                new SpaceToken(),
                 new WhiteSpaceToken(),
                 new ValueMarkerToken(),
                 new ValueSeparatorToken(),
@@ -194,6 +199,7 @@ namespace InfHelper.Parsers
                 case TokenType.Letter:
                 case TokenType.ValueSeparator:
                 case TokenType.WhiteSpace:
+                case TokenType.Space:
                     keyTmpValue += tokenBase.Symbol;
                     break;
                 case TokenType.ValueMarker:
@@ -245,6 +251,7 @@ namespace InfHelper.Parsers
                     InitKeyIdParsing();
                     break;
                 case TokenType.Letter:
+                case TokenType.Space:
                     currentCategory.Name += tokenBase.Symbol;
                     break;
                 default:
@@ -277,6 +284,7 @@ namespace InfHelper.Parsers
                     InitKeyValueParsing();
                     break;
                 case TokenType.WhiteSpace:
+                case TokenType.Space:
                     //ignore spaces at the begining
                     if (!string.IsNullOrEmpty(keyTmpValue))
                     {
