@@ -1,11 +1,12 @@
-﻿using System;
+﻿using InfHelper.Exceptions;
+using InfHelper.Models;
+using InfHelper.Parsers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using InfHelper.Models;
-using InfHelper.Parsers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace InfHelperTests.Parsers
 {
@@ -28,9 +29,34 @@ namespace InfHelperTests.Parsers
         }
 
         [TestMethod()]
+        public void CategoryWithSlashParsing()
+        {
+            string test = "[CATEGOR\\Y]";
+            var categories = new List<Category>();
+            var parser = new ContentParser();
+            parser.CategoryDiscovered += (sender, category) => categories.Add(category);
+
+            parser.Parse(test);
+
+            Assert.IsTrue(categories.Count == 1 && categories.First().Name == "CATEGOR\\Y");
+        }
+
+        [TestMethod()]
+        [ExpectedException(typeof(InvalidTokenException), @"'\' are not allowed as the last token in a Category")]
+        public void CategoryWithSlashAsLastCharacterParsing()
+        {
+            string test = "[CATEGORY\\]";
+            var categories = new List<Category>();
+            var parser = new ContentParser();
+            parser.CategoryDiscovered += (sender, category) => categories.Add(category);
+
+            parser.Parse(test);
+        }
+
+        [TestMethod()]
         public void MultipleCategoryParsing()
         {
-            int CATEGORIES_COUNT = new Random().Next(1,10);
+            int CATEGORIES_COUNT = new Random().Next(1, 10);
             var testCategories = new List<string>();
 
             for (int i = 1; i <= CATEGORIES_COUNT; i++)
@@ -39,7 +65,7 @@ namespace InfHelperTests.Parsers
             }
 
             string test = string.Join(" \n ", testCategories);
-            
+
             var categories = new List<Category>();
             var parser = new ContentParser();
             parser.CategoryDiscovered += (sender, category) => categories.Add(category);
@@ -95,7 +121,7 @@ namespace InfHelperTests.Parsers
             for (var i = 0; i < Keys_Count; i++)
             {
                 Assert.IsTrue(firstCategory.Keys[i].Id == $"Key{i}");
-                Assert.IsTrue(firstCategory.Keys[i].KeyValues.First().Value == $"Value{i}" );
+                Assert.IsTrue(firstCategory.Keys[i].KeyValues.First().Value == $"Value{i}");
             }
         }
 
@@ -193,7 +219,7 @@ namespace InfHelperTests.Parsers
             var parser = new ContentParser();
             foreach (var file in files)
             {
-                sw.Reset();                
+                sw.Reset();
                 Trace.WriteLine("Loading file content: " + file);
                 var content = File.ReadAllText(file);
                 Trace.WriteLine("Parsing file: " + file);
@@ -213,7 +239,7 @@ namespace InfHelperTests.Parsers
             parser.Parse(content);
 
             //Check categories names
-            Assert.AreEqual(categories[0].Name,"Version");
+            Assert.AreEqual(categories[0].Name, "Version");
             Assert.AreEqual(categories[1].Name, "DestinationDirs");
             Assert.AreEqual(categories[2].Name, "Manufacturer");
             Assert.AreEqual(categories[3].Name, "Standard");

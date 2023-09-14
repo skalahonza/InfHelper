@@ -1,8 +1,8 @@
-﻿using System;
+﻿using InfHelper.Exceptions;
+using InfHelper.Models.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using InfHelper.Exceptions;
-using InfHelper.Models.Tokens;
 
 namespace InfHelper.Parsers
 {
@@ -19,6 +19,9 @@ namespace InfHelper.Parsers
                 allTokens = new HashSet<TokenBase>(value.OrderByDescending(x => (int)x.Type));
             }
         }
+
+        public uint Length { get; private set; }
+        public uint Position { get; private set; }
 
         public ISet<TokenBase> AllowedTokens { get; set; }
         public ISet<TokenBase> IgnoredTokens { get; set; }
@@ -65,9 +68,13 @@ namespace InfHelper.Parsers
             int row = 0, col = 0;
             string line = "";
 
+            Length = (uint)formula.Length;
+            Position = 0;
+
             foreach (var c in formula)
             {
                 bool found = false;
+                Position += 1;
 
                 if (c == '\n')
                 {
