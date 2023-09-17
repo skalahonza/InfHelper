@@ -1,10 +1,10 @@
-﻿using System;
+﻿using InfHelper.Exceptions;
+using InfHelper.Models;
+using InfHelper.Models.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using InfHelper.Exceptions;
-using InfHelper.Models;
-using InfHelper.Models.Tokens;
 
 namespace InfHelper.Parsers
 {
@@ -78,7 +78,8 @@ namespace InfHelper.Parsers
             {
                 new SpaceToken(),
                 new CategoryClosingToken(),
-                new LetterToken()
+                new LetterToken(),
+                new LineConcatenatorToken()
             };
         }
 
@@ -249,6 +250,13 @@ namespace InfHelper.Parsers
             {
                 case TokenType.CategoryClosing:
                     InitKeyIdParsing();
+                    break;
+                case TokenType.LineConcatenator:
+                    if (this.parser.Position == (this.parser.Length - 1))
+                    {
+                        throw new InvalidTokenException(@"'\' are not allowed as the last token in a Category");
+                    }
+                    currentCategory.Name += tokenBase.Symbol;
                     break;
                 case TokenType.Letter:
                 case TokenType.Space:
