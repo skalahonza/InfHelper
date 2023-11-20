@@ -257,5 +257,19 @@ namespace InfHelperTests.Parsers
             Assert.AreEqual(categories[15].Name, "Razer_Installer_CopyFilesWOW64");
             Assert.AreEqual(categories[16].Name, "Strings");
         }
+
+        [TestMethod]
+        public void SourceDiskFileWithSpaces()
+        {
+            var content = File.ReadAllText(Path.Combine(testFolder, "sourcediskspaces.inf"));
+            var parser = new ContentParser();
+            var categories = new List<Category>();
+            parser.CategoryDiscovered += (sender, category) => categories.Add(category);
+            parser.Parse(content);
+
+            var sourceDiskFiles = categories.Where(c => c.Name == "SourceDisksFiles").ToList();
+            Assert.AreEqual(sourceDiskFiles[0].Keys[0].Id, "Dep With Space.txt");
+            Assert.AreEqual(sourceDiskFiles[0].Keys[1].Id, "file2.txt");
+        }
     }
 }
