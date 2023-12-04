@@ -409,16 +409,8 @@ namespace InfHelper.Parsers
 
         protected void KeyIdParsingCompleted()
         {
-            //check for trailing white spaces
-            for (var i = keyTmpValue.Length - 1; i >= 0; i--)
-            {
-                if (char.IsWhiteSpace(keyTmpValue[i]))
-                {
-                    keyTmpValue = keyTmpValue.Remove(i, 1);
-                }
-            }
-
-            currentKey.Id = keyTmpValue;
+            // trim any leading or trailing whitespace
+            currentKey.Id = keyTmpValue.Trim();
             keyTmpValue = null;
         }
 
