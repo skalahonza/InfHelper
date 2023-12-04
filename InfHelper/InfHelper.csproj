@@ -7,14 +7,14 @@
     <Description>
       This NuGet allows you to parse .inf files and browse them using object model wrappers (InfData). You can browse categories and ´their keys by handling them as collections or simply using [id] operators. The NuGet is not meant for installing, only for parsing and browsing the file. The feature for creating and INF file will be added in next versions.
     </Description>
-    <Copyright>Copyright © Jan Skála 2017 - All Rights Reserved</Copyright>
-    <Version>0.8.1</Version>
+    <Copyright>Copyright © Jan Skála 2023 - All Rights Reserved</Copyright>
+    <Version>0.10.1</Version>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <Authors>Jan Skála</Authors>
-    <PackageIconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</PackageIconUrl>
     <PackageId>InfHelper</PackageId>
     <PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/skalahonza/InfHelper</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/skalahonza/InfHelper</RepositoryUrl>
     <PackageReleaseNotes>
       This is a beta version, some features were not yet implemented or tested.
       Added case insensitivity.

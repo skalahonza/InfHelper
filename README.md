@@ -1,5 +1,4 @@
 # InfHelper
-![TFS Build: ](https://triads.visualstudio.com/_apis/public/build/definitions/cc9f9fd6-7e78-4a14-ad7c-a1824901880a/2/badge)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 * Nuget package for C# that makes it easy to parse .inf files, to store and work with information about system drivers.
