@@ -128,13 +128,13 @@ namespace InfHelper.Parsers
                 new NewLineToken(),
                 new SpaceToken(),
                 new WhiteSpaceToken(),
+                new InlineCommentToken(),
                 new ValueMarkerToken()
             };
 
             parser.IgnoredTokens = new HashSet<TokenBase>()
             {
                 new LineConcatenatorToken(),
-                new InlineCommentToken(),
                 new EqualityToken()
             };
         }
@@ -151,13 +151,13 @@ namespace InfHelper.Parsers
                 new ValueMarkerToken(),
                 new SpaceToken(),
                 new WhiteSpaceToken(),
+                new InlineCommentToken(),
                 new ValueSeparatorToken()
             };
 
             parser.IgnoredTokens = new HashSet<TokenBase>()
             {
                 new LineConcatenatorToken(),
-                new InlineCommentToken(),
                 new EqualityToken()
             };
         }
@@ -206,6 +206,10 @@ namespace InfHelper.Parsers
                 case TokenType.ValueMarker:
                     ValueParsingComplete(true);
                     InitKeyValueParsing();
+                    break;
+                case TokenType.InlineComment:
+                    ValueParsingComplete(true);
+                    InitCommentParsing(InitKeyValueParsing);
                     break;
                 default:
                     throw new InvalidTokenException("Invalid tokenBase found during comment parsing: " + tokenBase.Symbol);
@@ -339,6 +343,11 @@ namespace InfHelper.Parsers
                     break;
                 case TokenType.ValueMarker:
                     InitPureValueParsing();
+                    break;
+                case TokenType.InlineComment:
+                    ValueParsingComplete();
+                    KeyParsingComplete();
+                    InitCommentParsing(InitKeyIdParsing);
                     break;
             }
         }

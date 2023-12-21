@@ -80,7 +80,7 @@ namespace InfHelperTests
         public void SearchMethdTest()
         {
             string formula =
-                "[DestinationDirs]\r\nRazer_CoInstaller_CopyFiles = 11\r\nRazer_Installer_CopyFiles = 16422,\"Razer\\RzWizardPkg\"\r\nRazer_Installer_CopyFilesWOW64 = 16426,\"Razer\\RzWizardPkg\"";
+                "[DestinationDirs]\r\nRazer_CoInstaller_CopyFiles = 11 ; Comment\r\nRazer_Installer_CopyFiles = 16422,\"Razer\\RzWizardPkg\"\r\nRazer_Installer_CopyFilesWOW64 = 16426,\"Razer\\RzWizardPkg\"";
             var helper = new InfUtil();
             var data = helper.Parse(formula);
             Assert.AreEqual("11", data.FindKeyById("Razer_CoInstaller_CopyFiles").First().PrimitiveValue);
