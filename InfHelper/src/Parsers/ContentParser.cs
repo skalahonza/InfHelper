@@ -152,7 +152,9 @@ namespace InfHelper.Parsers
                 new SpaceToken(),
                 new WhiteSpaceToken(),
                 new InlineCommentToken(),
-                new ValueSeparatorToken()
+                new ValueSeparatorToken(),
+                new CategoryOpeningToken(),
+                new CategoryClosingToken()
             };
 
             parser.IgnoredTokens = new HashSet<TokenBase>()
@@ -201,6 +203,8 @@ namespace InfHelper.Parsers
                 case TokenType.ValueSeparator:
                 case TokenType.WhiteSpace:
                 case TokenType.Space:
+                case TokenType.CategoryOpening:
+                case TokenType.CategoryClosing:
                     keyTmpValue += tokenBase.Symbol;
                     break;
                 case TokenType.ValueMarker:
