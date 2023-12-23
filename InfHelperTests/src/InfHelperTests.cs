@@ -68,19 +68,24 @@ namespace InfHelperTests
         public void PureValueParsingTest()
         {
             string formula =
-                "[DestinationDirs]\r\nRazer_CoInstaller_CopyFiles = 11\r\nRazer_Installer_CopyFiles = 16422,\"Razer\\RzWizardPkg\"\r\nRazer_Installer_CopyFilesWOW64 = 16426,\"Razer\\RzWizardPkg\"";
+                "[DestinationDirs]\r\n" + 
+                "Razer_CoInstaller_CopyFiles = 11\r\n" +
+                "Razer_Installer_CopyFiles = 16422,\"Razer\\RzWizardPkg\"\r\n" +
+                "Razer_Installer_CopyFilesWOW64 = 16426,\"Razer\\RzWizardPkg\"\r\n" +
+                "Razer_Installer_CopyFilesWithBrackets = 16428,\"Razer\\RzWizardPkg ; [Brackets=X]\"";
             var helper = new InfUtil();
             var data = helper.Parse(formula);
             Assert.AreEqual("11", data["DestinationDirs"]["Razer_CoInstaller_CopyFiles"].PrimitiveValue);
             Assert.AreEqual("16422, \"Razer\\RzWizardPkg\"", data["DestinationDirs"]["Razer_Installer_CopyFiles"].PrimitiveValue);
             Assert.AreEqual("16426, \"Razer\\RzWizardPkg\"", data["DestinationDirs"]["Razer_Installer_CopyFilesWOW64"].PrimitiveValue);
+            Assert.AreEqual("16428, \"Razer\\RzWizardPkg ; [Brackets=X]\"", data["DestinationDirs"]["Razer_Installer_CopyFilesWithBrackets"].PrimitiveValue);
         }
 
         [TestMethod()]
         public void SearchMethdTest()
         {
             string formula =
-                "[DestinationDirs]\r\nRazer_CoInstaller_CopyFiles = 11\r\nRazer_Installer_CopyFiles = 16422,\"Razer\\RzWizardPkg\"\r\nRazer_Installer_CopyFilesWOW64 = 16426,\"Razer\\RzWizardPkg\"";
+                "[DestinationDirs]\r\nRazer_CoInstaller_CopyFiles = 11 ; Comment\r\nRazer_Installer_CopyFiles = 16422,\"Razer\\RzWizardPkg\"\r\nRazer_Installer_CopyFilesWOW64 = 16426,\"Razer\\RzWizardPkg\"";
             var helper = new InfUtil();
             var data = helper.Parse(formula);
             Assert.AreEqual("11", data.FindKeyById("Razer_CoInstaller_CopyFiles").First().PrimitiveValue);
