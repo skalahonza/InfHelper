@@ -8,11 +8,11 @@ namespace InfHelper.Parsers
     {
         uint Length { get; }
         uint Position { get; }
-        ISet<TokenBase> AllowedTokens { get; set; }
-        ISet<TokenBase> AllTokens { get; }
-        ISet<TokenBase> IgnoredTokens { get; set; }
-        event EventHandler<TokenBase> InvalidTokenFound;
-        event EventHandler<TokenBase> ValidTokenFound;
+        ISet<TokenType> AllowedTokenTypes { get; set; }
+        ISet<TokenType> AllTokenTypes { get; }
+        ISet<TokenType> IgnoredTokenTypes { get; set; }
+        event EventHandler<Token> InvalidTokenFound;
+        event EventHandler<Token> ValidTokenFound;
 
         void Parse(string formula);
     }

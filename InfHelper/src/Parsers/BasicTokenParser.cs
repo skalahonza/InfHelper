@@ -8,60 +8,60 @@ namespace InfHelper.Parsers
 {
     public class BasicTokenParser : ITokenParser
     {
-        private ISet<TokenBase> allTokens;
+        private ISet<TokenType> _allTokenTypes;
 
-        public ISet<TokenBase> AllTokens
+        public ISet<TokenType> AllTokenTypes
         {
-            get => allTokens;
-            private set
-            {
-                //Sort by priority - some tokens share symbols e.g. line concentrator and letter
-                allTokens = new HashSet<TokenBase>(value.OrderByDescending(x => (int)x.Type));
-            }
+            get => _allTokenTypes;
+            set => _allTokenTypes = PrioritizeTokenTypes(value);
+        }
+
+        private ISet<TokenType> PrioritizeTokenTypes(IEnumerable<TokenType> value)
+        {
+            //Sort by priority - some tokens share symbols e.g. line concentrator and letter
+            return new HashSet<TokenType>(value.OrderByDescending(x => (int)x));
         }
 
         public uint Length { get; private set; }
         public uint Position { get; private set; }
 
-        public ISet<TokenBase> AllowedTokens { get; set; }
-        public ISet<TokenBase> IgnoredTokens { get; set; }
-
-        public event EventHandler<TokenBase> InvalidTokenFound;
-        public event EventHandler<TokenBase> ValidTokenFound;
-
-        public BasicTokenParser() : this(new HashSet<TokenBase>(), new HashSet<TokenBase>())
+        private ISet<TokenType> _allowedTokenTypes;
+        public ISet<TokenType> AllowedTokenTypes
         {
-            AllTokens = AllAvailableTokens;
+            get => _allowedTokenTypes;
+            set => _allowedTokenTypes = value ?? new HashSet<TokenType>();
         }
 
-        public BasicTokenParser(ISet<TokenBase> allowedTokens, ISet<TokenBase> ignoredTokens)
+        private ISet<TokenType> _ignoredTokenTypes;
+        public ISet<TokenType> IgnoredTokenTypes
         {
-            AllTokens = AllAvailableTokens;
-            AllowedTokens = allowedTokens;
-            IgnoredTokens = ignoredTokens;
+            get => _ignoredTokenTypes;
+            set => _ignoredTokenTypes = value ?? new HashSet<TokenType>();
         }
 
-        public BasicTokenParser(ISet<TokenBase> allTokens, ISet<TokenBase> allowedTokens, ISet<TokenBase> ignoredTokens)
+        public event EventHandler<Token> InvalidTokenFound;
+        public event EventHandler<Token> ValidTokenFound;
+
+        public BasicTokenParser() : this(new HashSet<TokenType>(), new HashSet<TokenType>())
         {
-            AllTokens = allTokens;
-            AllowedTokens = allowedTokens;
-            IgnoredTokens = ignoredTokens;
+            AllTokenTypes = AllAvailableTokenTypes;
         }
 
-        public static ISet<TokenBase> AllAvailableTokens => new HashSet<TokenBase>
+        public BasicTokenParser(ISet<TokenType> allowedTokenTypes, ISet<TokenType> ignoredTokenTypes)
         {
-            new CategoryClosingToken(),
-            new CategoryOpeningToken(),
-            new EqualityToken(),
-            new InlineCommentToken(),
-            new NewLineToken(),
-            new SpaceToken(),
-            new WhiteSpaceToken(),
-            new LineConcatenatorToken(),
-            new LetterToken(),
-            new ValueSeparatorToken(),
-            new ValueMarkerToken()
-        };
+            AllTokenTypes = AllAvailableTokenTypes;
+            AllowedTokenTypes = allowedTokenTypes;
+            IgnoredTokenTypes = ignoredTokenTypes;
+        }
+
+        public BasicTokenParser(ISet<TokenType> allTokenTypes, ISet<TokenType> allowedTokenTypes, ISet<TokenType> ignoredTokenTypes)
+        {
+            AllTokenTypes = allTokenTypes;
+            AllowedTokenTypes = allowedTokenTypes;
+            IgnoredTokenTypes = ignoredTokenTypes;
+        }
+
+        public static ISet<TokenType> AllAvailableTokenTypes => new HashSet<TokenType>(Enum.GetValues(typeof(TokenType)).Cast<TokenType>());
 
         public virtual void Parse(string formula)
         {
@@ -73,7 +73,6 @@ namespace InfHelper.Parsers
 
             foreach (var c in formula)
             {
-                bool found = false;
                 Position += 1;
 
                 if (c == '\n')
@@ -84,39 +83,40 @@ namespace InfHelper.Parsers
                 }
                 col++;
                 line += c;
-
-                //examine all known tokens
-                foreach (var token in AllTokens)
-                {
-
-                    if (!token.IsToken(c)) continue;
-
-                    //tokenBase found
-                    token.Symbol = c;
-                    found = true;
-
-                    //ignored tokenBase detected
-                    if (IgnoredTokens != null && IgnoredTokens.Any(x => x.Type == token.Type))
-                        continue;
-
-                    //not allowed tokenBase detected
-                    if (AllowedTokens == null || AllowedTokens.All(x => x.Type != token.Type))
-                    {
-                        InvalidTokenFound?.Invoke(this, token);
-                        continue;
-                    }
-
-                    //allowed tokenBase detected
-                    ValidTokenFound?.Invoke(this, token);
-                    break;
-                }
-
-                //tokenBase not recognized
-                if (!found)
-                    throw new NoneTokenRecognizedException($"None tokenBase recognized in row:{row} col:{col}" + Environment.NewLine + "Examined symbol: " + c
-                        + "\nSymbol number: " + Convert.ToInt16(c)
-                        + "\nExamined line: " + line);
+                HandleToken(c, row, col, line);
             }
+        }
+
+        private void HandleToken(char c, int row, int col, string line)
+        {
+            // examine matching TokenTypes but skip ignored
+            foreach (var tokenType in AllTokenTypes
+                         .Where(IsMatchingTokenType(c))
+                         .Where(tokenType => !IgnoredTokenTypes.Contains(tokenType)))
+            {
+                GetTokenHandler(tokenType)?.Invoke(this, TokenTypes.CreateToken(tokenType, c));
+                return;
+            }
+
+            // no unignored match, so let's see if we recognize the character at all 
+            if (!AllTokenTypes.Any(IsMatchingTokenType(c)))
+            {
+                // TokenType not recognized
+                throw new NoTokenRecognizedException($"TokenType not recognized in row:{row} col:{col}" + Environment.NewLine + 
+                                                     "Examined symbol: " + c + Environment.NewLine +
+                                                     "Symbol number: " + Convert.ToInt16(c) + Environment.NewLine +
+                                                     "Examined line: " + line);
+            }
+        }
+
+        private static Func<TokenType, bool> IsMatchingTokenType(char c)
+        {
+            return tokenType => TokenTypes.IsToken(tokenType, c);
+        }
+
+        private EventHandler<Token> GetTokenHandler(TokenType tokenType)
+        {
+            return AllowedTokenTypes.Contains(tokenType) ? ValidTokenFound : InvalidTokenFound;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using InfHelper.Models.Tokens;
 using InfHelper.Parsers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,17 +14,17 @@ namespace InfHelperTests.Parsers
         public void TokenOrderTest()
         {
             string formula = "[TEST]";
-            var parser = new BasicTokenParser(new HashSet<TokenBase>
+            var parser = new BasicTokenParser(new HashSet<TokenType>
             {
-                new CategoryOpeningToken(),
-                new LetterToken(),
-                new CategoryClosingToken(),
-            }, new HashSet<TokenBase>());
-            string result = "";
-            parser.ValidTokenFound += (sender, token) => result += token.Symbol;
+                TokenType.CategoryOpening,
+                TokenType.Letter,
+                TokenType.CategoryClosing,
+            }, new HashSet<TokenType>());
+            TestTokenHandler validTokenHandler = new TestTokenHandler();
+            parser.ValidTokenFound += validTokenHandler.EventHandler;
             parser.Parse(formula);
 
-            Assert.AreEqual(formula, result);
+            Assert.AreEqual(formula, validTokenHandler.Result);
         }
 
         [TestMethod()]
@@ -30,110 +32,107 @@ namespace InfHelperTests.Parsers
         {
             string expression = "[TEST]";
             string formula = "  \n   " + expression + "   \n   ";
-            var parser = new BasicTokenParser(new HashSet<TokenBase>
+            var parser = new BasicTokenParser(new HashSet<TokenType>
             {
-                new CategoryOpeningToken(),
-                new LetterToken(),
-                new CategoryClosingToken(),
-            }, new HashSet<TokenBase>
+                TokenType.CategoryOpening,
+                TokenType.Letter,
+                TokenType.CategoryClosing,
+            }, new HashSet<TokenType>
             {
-                new WhiteSpaceToken(),
-                new NewLineToken()
+                TokenType.WhiteSpace,
+                TokenType.NewLine
             });
 
-            string result = "";
-            parser.ValidTokenFound += (sender, token) => result += token.Symbol;
+            TestTokenHandler validTokenHandler = new TestTokenHandler();
+            parser.ValidTokenFound += validTokenHandler.EventHandler;
             parser.Parse(formula);
 
-            Assert.AreEqual(expression, result);
+            Assert.AreEqual(expression, validTokenHandler.Result);
         }
 
         [TestMethod()]
         public void AllowedTokensTest()
         {
             string formula = "[TE;ST] \\";
-            var parser = new BasicTokenParser(new HashSet<TokenBase>
+            var parser = new BasicTokenParser(new HashSet<TokenType>
             {
-                new CategoryOpeningToken(),
-                new LetterToken(),
-                new CategoryClosingToken(),
-            }, new HashSet<TokenBase>
+               TokenType.CategoryOpening,
+               TokenType.Letter,
+               TokenType.CategoryClosing,
+            }, new HashSet<TokenType>
             {
-                new WhiteSpaceToken(),
-                new NewLineToken()
+                TokenType.WhiteSpace,
+                TokenType.NewLine
             });
 
-            string result = "";
-            string invalids = "";
-            parser.ValidTokenFound += (sender, token) => result += token.Symbol;
-            parser.InvalidTokenFound += (sender, token) =>
-            {
-                invalids += token.Symbol;
-            };
+            TestTokenHandler invalidTokenHandler = new TestTokenHandler();
+            parser.InvalidTokenFound += invalidTokenHandler.EventHandler;
+            
             parser.Parse(formula);
 
-            Assert.IsTrue(invalids.Contains(";") && invalids.Contains("\\"));
+            Assert.AreEqual("; \\", invalidTokenHandler.Result);
         }
 
         [TestMethod()]
         public void TokensWithSameSymbol()
         {
             string formula = "Test = test\\\ntest";
-            var parser = new BasicTokenParser(new HashSet<TokenBase>
+            var parser = new BasicTokenParser(new HashSet<TokenType>
             {
-                new LetterToken(),
-                new EqualityToken(),
-                new LineConcatenatorToken()
-            }, new HashSet<TokenBase>
+                TokenType.Letter,
+                TokenType.Equality,
+                TokenType.LineConcatenator
+            }, new HashSet<TokenType>
             {
-                new WhiteSpaceToken(),
-                new NewLineToken()
+                TokenType.WhiteSpace,
+                TokenType.NewLine
             });
 
-            var tokens = new List<TokenType>();
-            parser.ValidTokenFound += (sender, token) => tokens.Add(token.Type);
+            var missingTokens = new HashSet<TokenType> {TokenType.Equality, TokenType.Letter, TokenType.LineConcatenator};
+            parser.ValidTokenFound += (sender, token) => missingTokens.Remove(token.Type);
             parser.Parse(formula);
 
-            Assert.IsTrue(tokens.Contains(TokenType.EQ) && tokens.Contains(TokenType.Letter) && tokens.Contains(TokenType.LineConcatenator));
+            Assert.IsFalse(missingTokens.Any(), 
+                "Missing expected Tokens: " + string.Join(", ", missingTokens.Select(a => a.ToString())));
         }
 
         [TestMethod()]
         public void TestOfAdaptability()
         {
             string formula = "Test = test\\\ntest";
-            var parser = new BasicTokenParser(new HashSet<TokenBase>
+            var parser = new BasicTokenParser(new HashSet<TokenType>
             {
-                new LetterToken(),
-                new EqualityToken(),
-            }, new HashSet<TokenBase>
+                TokenType.Letter,
+                TokenType.Equality,
+            }, new HashSet<TokenType>
             {
-                new WhiteSpaceToken(),
+                TokenType.WhiteSpace,
             });
 
             string id = "";
             string key = "";
 
-            void keyParsing(object sender, TokenBase token)
+            void KeyParsing(object sender, Token token)
             {
                 switch (token.Type)
                 {
                     case TokenType.Letter:
                         id += token.Symbol;
                         break;
-                    case TokenType.EQ:
-                        parser.ValidTokenFound -= keyParsing;
-                        parser.AllowedTokens = new HashSet<TokenBase>()
+                    case TokenType.Equality:
+                        parser.ValidTokenFound -= KeyParsing;
+                        parser.AllowedTokenTypes = new HashSet<TokenType>()
                         {
-                            new LetterToken(),
-                            new NewLineToken(),
-                            new LineConcatenatorToken(),
+                            TokenType.Letter,
+                            TokenType.NewLine,
+                            TokenType.LineConcatenator,
                         };
-                        parser.ValidTokenFound += valueParsing;
+                        parser.ValidTokenFound += ValueParsing;
                         break;
                 }
             }
 
-            void valueParsing(object sender, TokenBase token)
+            void ValueParsing(object sender, Token token)
             {
                 switch (token.Type)
                 {
@@ -141,16 +140,24 @@ namespace InfHelperTests.Parsers
                         key += token.Symbol;
                         break;
                     case TokenType.LineConcatenator:
-                        parser.IgnoredTokens.Add(new NewLineToken());                  
+                        parser.IgnoredTokenTypes.Add(TokenType.NewLine);                  
                         break;
                 }
             }
 
-            parser.ValidTokenFound += keyParsing;
+            parser.ValidTokenFound += KeyParsing;
             parser.Parse(formula);
 
             Assert.AreEqual(id,"Test");
             Assert.AreEqual(key,"testtest");
         }
     }
+
+    class TestTokenHandler
+    {
+        public EventHandler<Token> EventHandler => (sender, token) => Result += token.Symbol;
+
+        public string Result { get; private set; }
+    }
+    
 }
