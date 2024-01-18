@@ -134,5 +134,17 @@ namespace InfHelperTests
             // info.Categories should contain [OEM URLS]
             Assert.IsTrue(info.Categories.Count(x => x.Name == "OEM URLS") == 1);
         }
+
+        [TestMethod()]
+        public void EmptySeparatorsAreNull()
+        {
+            var helper = new InfUtil();
+            var info = helper.ParseFile(Path.Combine(testFolder, "oem136.inf"));
+
+            var sourceDisksSection = info.Categories.FirstOrDefault(c => c.Name == "SourceDisksNames");
+
+            Assert.IsTrue(sourceDisksSection.Keys.First().KeyValues.Count == 4);
+            Assert.IsTrue(sourceDisksSection.Keys.First().KeyValues.Last().Value == "\\");
+        }
     }
 }
