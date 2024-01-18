@@ -128,13 +128,13 @@ namespace InfHelper.Parsers
                 new NewLineToken(),
                 new SpaceToken(),
                 new WhiteSpaceToken(),
+                new InlineCommentToken(),
                 new ValueMarkerToken()
             };
 
             parser.IgnoredTokens = new HashSet<TokenBase>()
             {
                 new LineConcatenatorToken(),
-                new InlineCommentToken(),
                 new EqualityToken()
             };
         }
@@ -156,9 +156,11 @@ namespace InfHelper.Parsers
 
             parser.IgnoredTokens = new HashSet<TokenBase>()
             {
-                new LineConcatenatorToken(),
                 new InlineCommentToken(),
-                new EqualityToken()
+                new LineConcatenatorToken(),
+                new EqualityToken(),
+                new CategoryOpeningToken(),
+                new CategoryClosingToken()
             };
         }
 
@@ -339,6 +341,11 @@ namespace InfHelper.Parsers
                     break;
                 case TokenType.ValueMarker:
                     InitPureValueParsing();
+                    break;
+                case TokenType.InlineComment:
+                    ValueParsingComplete();
+                    KeyParsingComplete();
+                    InitCommentParsing(InitKeyIdParsing);
                     break;
             }
         }

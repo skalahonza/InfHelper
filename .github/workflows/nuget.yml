@@ -1,0 +1,28 @@
+name: Publish to NuGet
+
+on:
+  workflow_dispatch:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Extract version from release tag
+      run: echo "VERSION=$(echo ${{ github.ref }} | sed 's/refs\/tags\///')" >> $GITHUB_ENV
+
+    - name: Build and Pack
+      run: |
+        echo "VERSION=$VERSION"
+        cd InfHelper
+        dotnet pack -c Release -p:PackageVersion=$VERSION -o nupkg
+
+    - name: Publish to NuGet
+      run: dotnet nuget push InfHelper/nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
