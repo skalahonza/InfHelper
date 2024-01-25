@@ -323,7 +323,7 @@ namespace InfHelper.Parsers
             switch (tokenBase.Type)
             {
                 case TokenType.ValueSeparator:
-                    ValueParsingComplete();
+                    ValueParsingComplete(allowNull: true);
                     break;
                 case TokenType.Letter:
                     keyTmpValue += tokenBase.Symbol;
@@ -370,9 +370,9 @@ namespace InfHelper.Parsers
             }
         }
 
-        protected void ValueParsingComplete(bool pure = false)
+        protected void ValueParsingComplete(bool pure = false, bool allowNull = false)
         {
-            if (!string.IsNullOrEmpty(keyTmpValue))
+            if (allowNull || !string.IsNullOrEmpty(keyTmpValue))
             {
                 KeyValue keyValue;
                 if (!pure)
