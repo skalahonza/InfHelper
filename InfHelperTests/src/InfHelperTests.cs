@@ -141,6 +141,19 @@ namespace InfHelperTests
         }
 
         [TestMethod()]
+        public void AssumeNewLinesEndQuote()
+        {
+            var helper = new InfUtil();
+            var data = helper.ParseFile(Path.Combine(testFolder, "oem137.inf"));
+
+            var strings = data.Categories.FirstOrDefault(c => c.Name == "Strings");
+
+            Assert.AreEqual("\"{DFF21BE1-F70F-11D0-B917-00A0C9223196}\"", strings.Keys.Where(k => k.Id == "KSNODETYPE_MICROPHONE").First().PrimitiveValue);
+
+            Assert.AreEqual("\"{17CCA71B-ECD7-11D0-B908-00A0C9223196}\"", strings.Keys.Where(k => k.Id == "Proxy.CLSID").First().PrimitiveValue);
+        }
+
+        [TestMethod()]
         public void EmptySeparatorsAreNull()
         {
             var helper = new InfUtil();

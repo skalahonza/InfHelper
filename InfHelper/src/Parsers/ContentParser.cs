@@ -151,7 +151,8 @@ namespace InfHelper.Parsers
                 new ValueMarkerToken(),
                 new SpaceToken(),
                 new WhiteSpaceToken(),
-                new ValueSeparatorToken()
+                new ValueSeparatorToken(),
+                new NewLineToken()
             };
 
             parser.IgnoredTokens = new HashSet<TokenBase>()
@@ -206,6 +207,7 @@ namespace InfHelper.Parsers
                     keyTmpValue += tokenBase.Symbol;
                     break;
                 case TokenType.ValueMarker:
+                case TokenType.NewLine:
                     ValueParsingComplete(true);
                     InitKeyValueParsing();
                     break;
