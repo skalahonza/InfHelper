@@ -82,6 +82,16 @@ namespace InfHelperTests
         }
 
         [TestMethod()]
+        public void QuotedKeyParsingTest()
+        {
+            string formula =
+                "[AzaliaManufacturerID.NTamd64.10.0...15063]\r\n\"Realtek High Definition Audio\" = IntcAzAudModel, HDAUDIO\\FUNC_01&VEN_10EC&DEV_0257&SUBSYS_17AA39F5 ; ThinkBook 16p NX ARH\r\n";
+            var helper = new InfUtil();
+            var data = helper.Parse(formula);
+            Assert.AreEqual("IntcAzAudModel, HDAUDIO\\FUNC_01&VEN_10EC&DEV_0257&SUBSYS_17AA39F5", data["AzaliaManufacturerID.NTamd64.10.0...15063"]["Realtek High Definition Audio"].PrimitiveValue);
+        }
+
+        [TestMethod()]
         public void SearchMethdTest()
         {
             string formula =
