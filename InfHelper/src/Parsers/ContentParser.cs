@@ -207,9 +207,20 @@ namespace InfHelper.Parsers
                     keyTmpValue += tokenBase.Symbol;
                     break;
                 case TokenType.ValueMarker:
+                    if (!string.IsNullOrEmpty(currentKey.Id))
+                    {
+                        ValueParsingComplete(true);
+                        InitKeyValueParsing();
+                    }
+                    else
+                    {
+                        InitKeyIdParsing();
+                    }
+                    break;
                 case TokenType.NewLine:
                     ValueParsingComplete(true);
-                    InitKeyValueParsing();
+                    KeyParsingComplete();
+                    InitKeyIdParsing();
                     break;
                 default:
                     throw new InvalidTokenException("Invalid tokenBase found during comment parsing: " + tokenBase.Symbol);
