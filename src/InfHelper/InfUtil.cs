@@ -15,7 +15,20 @@ public static class InfUtil
     {
         var infData = new InfData();
         var parser = new ContentParser();
-        parser.CategoryDiscovered += (sender, category) => infData.Categories.Add(category);
+        parser.CategoryDiscovered += (sender, category) =>
+        {
+			var existingCategory = infData.Categories
+	            .FirstOrDefault(x => x.IsNamed(category.Name));
+
+			if (existingCategory is null)
+			{
+				infData.Categories.Add(category);
+			}
+			else
+			{
+				existingCategory.Keys.AddRange(category.Keys);
+			}
+		};
         parser.Parse(data);
         return infData;
     }

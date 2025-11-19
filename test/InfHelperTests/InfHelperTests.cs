@@ -45,7 +45,19 @@ public class InfHelperTests
         Assert.IsTrue(data["Razer_CoInstaller_AddReg"].Keys.First().KeyValues.All(x => values.Contains(x.Value)));
     }
 
-    [TestMethod()]
+	[TestMethod]
+	public void DuplicateCategoryParseTest()
+	{
+		var content = File.ReadAllText(Path.Combine(testFolder, "mergesections.inf"));
+		var data = InfUtil.Parse(content);
+
+        var versionSection = data.Categories.Where(x => x.IsNamed("Version"));
+
+        Assert.AreEqual(1, versionSection.Count());
+        Assert.AreEqual(7, versionSection.First().Keys.Count);
+	}
+
+	[TestMethod()]
     public void FileParserEndpointTest()
     {
         var sw = new Stopwatch();

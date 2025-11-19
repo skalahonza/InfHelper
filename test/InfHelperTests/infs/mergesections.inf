@@ -1,0 +1,23 @@
+; Copyright: (c) 2014 Razer Inc. All rights reserved
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = HIDClass
+ClassGuid   = {745a17a0-74d3-11d0-b6fe-00a0c90f57da}
+Provider    = %Razer%
+DriverVer=12/01/2013,6.2.9200.16425
+CatalogFile.NTx86 = rz0502dev.cat
+[Version]
+CatalogFile.NTAMD64 = rz0502dev_64.cat
+[SourceDisksNames]
+1 = %DiskId1%,,,""
+
+[SourceDisksFiles]
+RazerCoinstaller.dll=1,,
+RzWizardPkg.exe	= 1,,
+[Strings]
+Razer                    = "Razer Inc"
+DiskId1                  = "Razer Installer"
+Razer.SvcDesc            = "Razer Device Driver"
+
+Razer0502.DeviceDesc     = "Razer Kraken"
